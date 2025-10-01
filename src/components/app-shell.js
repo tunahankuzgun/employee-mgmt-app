@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { changeLanguage, t } from '../utils/i18n.js';
 
 /**
  * App Shell - Main application container with modern dashboard design
@@ -21,12 +22,10 @@ export class AppShell extends LitElement {
 
   _toggleLanguage() {
     const newLang = this.currentLanguage === 'en' ? 'tr' : 'en';
+    changeLanguage(newLang);
     this.currentLanguage = newLang;
-    document.documentElement.lang = newLang;
     
-    document.dispatchEvent(new CustomEvent('language-changed', {
-      detail: { language: newLang }
-    }));
+    this.requestUpdate();
   }
 
   firstUpdated() {
@@ -160,9 +159,9 @@ export class AppShell extends LitElement {
         </div>
         <div class="header-actions">
           <div class="employees-text">
-             Employees
+            ${t('header.employees')}
           </div>
-          <a href="/add" class="add-new-btn">+ Add New</a>
+          <a href="/add" class="add-new-btn">+ ${t('header.addEmployee')}</a>
           <div class="language-flag" @click="${this._toggleLanguage}">
             ${this.currentLanguage === 'tr' ? '🇹🇷' : '🇺🇸'}
           </div>
