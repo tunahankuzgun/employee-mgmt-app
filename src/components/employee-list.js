@@ -100,7 +100,7 @@ export class EmployeeList extends LitElement {
         dateOfBirth: '1991-04-27',
         salary: 60000,
       },
-      ...Array.from({length: 15}, (_, i) => ({
+      ...Array.from({length: 50}, (_, i) => ({
         id: i + 7,
         firstName: 'Ahmet',
         lastName: 'Sourtimes',
@@ -171,7 +171,7 @@ export class EmployeeList extends LitElement {
     .employee-list-actions {
       display: flex;
       cursor: pointer;
-      color: #ff620070;
+      color: #ff620040;
       gap: 1rem;
       align-items: center;
       flex-wrap: wrap;
@@ -180,6 +180,11 @@ export class EmployeeList extends LitElement {
     .employee-list-actions svg.active {
       color: #ff6200;
     }
+
+    .employee-list-actions svg:hover {
+      scale: 1.1;
+    }
+
     .employee-list-body {
       background-color: #fff;
       display: flex;
@@ -190,11 +195,66 @@ export class EmployeeList extends LitElement {
       width: 100%;
       height: 100%;
     }
+
     .employee-table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 0;
       font-size: 0.875rem;
+    }
+
+    .table-body tr:hover {
+      background: #f8f9fa;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 40px;
+    } /* Checkbox */
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 80px;
+      max-width: 80px;
+    } /* First Name */
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 80px;
+      max-width: 80px;
+    } /* Last Name */
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 90px;
+      max-width: 90px;
+    } /* Date Employment */
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 90px;
+      max-width: 90px;
+    } /* Date Birth */
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 120px;
+      max-width: 120px;
+    } /* Phone */
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 180px;
+      max-width: 180px;
+    } /* Email */
+    th:nth-child(8),
+    td:nth-child(8) {
+      width: 80px;
+      max-width: 80px;
+    } /* Department */
+    th:nth-child(9),
+    td:nth-child(9) {
+      width: 80px;
+      max-width: 80px;
+    } /* Position */
+    th:nth-child(10),
+    td:nth-child(10) {
+      width: 80px;
+      max-width: 80px;
     }
 
     .table-header th {
@@ -216,6 +276,11 @@ export class EmployeeList extends LitElement {
       text-overflow: ellipsis;
     }
 
+    input[type='checkbox'] {
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
     .actions {
       display: flex;
       gap: 0.5rem;
@@ -230,14 +295,42 @@ export class EmployeeList extends LitElement {
         scale: 1.1;
       }
     }
+
+    .pagination-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pagination div.active {
+      background-color: #ff6200;
+      color: #fff;
+      border-radius: 100%;
+    }
+
+    .pagination-next,
+    .pagination-prev {
+      height: 100%;
+    }
+
+    .pagination-item {
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .pagination svg {
+      cursor: pointer;
+    }
   `;
 
   render() {
     const paginatedEmployees = this._getPaginatedEmployees();
     const totalItems = this.filteredEmployees.length;
-    const startItem =
-      totalItems === 0 ? 0 : (this.currentPage - 1) * this.itemsPerPage + 1;
-    const endItem = Math.min(this.currentPage * this.itemsPerPage, totalItems);
     return html`
       <div class="employee-list-container">
         <div class="employee-list-header">
@@ -287,19 +380,10 @@ export class EmployeeList extends LitElement {
           </div>
         </div>
         ${this.viewMode === 'table'
-          ? this._renderTableView(
-              paginatedEmployees,
-              totalItems,
-              startItem,
-              endItem
-            )
+          ? this._renderTableView(paginatedEmployees)
           : this._renderListView(paginatedEmployees)}
-        ${this.viewMode === 'list'
-          ? this._renderPagination(totalItems, startItem, endItem)
-          : ''}
-
         <div class="employee-list-footer">
-          ${this._renderPagination(totalItems, startItem, endItem)}
+          ${this._renderPagination(totalItems)}
         </div>
       </div>
     `;
@@ -392,7 +476,7 @@ export class EmployeeList extends LitElement {
     `;
   }
 
-  _renderPagination(totalItems, startItem, endItem) {
+  _renderPagination(totalItems) {
     if (totalItems === 0) {
       return html`
         <div class="pagination-section">
@@ -408,37 +492,62 @@ export class EmployeeList extends LitElement {
     return html`
       <div class="pagination-section">
         <div class="pagination">
-          <button
-            ?disabled="${this.currentPage === 1}"
-            @click="${() => this._handlePageChange(this.currentPage - 1)}"
-          >
-            <!-- TODO add icons -->
-            ${t('employeeList.previous', 'Previous')}
-          </button>
-
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              color="${this.currentPage === 1 ? 'gray' : '#ff6200'}"
+              class="pagination-prev"
+              @click="${() =>
+                this.currentPage !== 1
+                  ? this._handlePageChange(this.currentPage - 1)
+                  : null}"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </div>
           ${pages.map(
             (page) => html`
-              <button
-                class="${page === this.currentPage ? 'active' : ''}"
+              <div
+                class="${page === this.currentPage
+                  ? 'active'
+                  : ''} pagination-item"
                 @click="${() => this._handlePageChange(page)}"
               >
                 ${page}
-              </button>
+              </div>
             `
           )}
-
-          <button
-            ?disabled="${this.currentPage === this.totalPages}"
-            @click="${() => this._handlePageChange(this.currentPage + 1)}"
-          >
-            ${t('employeeList.next', 'Next')} →
-          </button>
-        </div>
-
-        <div class="pagination-info">
-          ${t('employeeList.showing', 'Showing')} ${startItem}-${endItem}
-          ${t('employeeList.of', 'of')} ${totalItems}
-          ${t('employeeList.employees', 'employees')}
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              color="${this.currentPage === this.totalPages
+                ? 'gray'
+                : '#ff6200'}"
+              class="pagination-next"
+              @click="${() =>
+                this.currentPage !== this.totalPages
+                  ? this._handlePageChange(this.currentPage + 1)
+                  : null}"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </div>
         </div>
       </div>
     `;
