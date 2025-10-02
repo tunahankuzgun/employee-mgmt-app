@@ -1,20 +1,20 @@
-import { LitElement, html, css } from 'lit';
-import { changeLanguage, t } from '../utils/i18n.js';
+import {LitElement, html, css} from 'lit';
+import {changeLanguage, t} from '../utils/i18n.js';
 
 /**
  * App Shell - Main application container with modern dashboard design
  */
 export class AppShell extends LitElement {
   static properties = {
-    currentPath: { type: String },
-    currentLanguage: { type: String }
+    currentPath: {type: String},
+    currentLanguage: {type: String},
   };
 
   constructor() {
     super();
     this.currentPath = window.location.pathname;
     this.currentLanguage = document.documentElement.lang || 'en';
-    
+
     window.addEventListener('vaadin-router-location-changed', (e) => {
       this.currentPath = e.detail.location.pathname;
     });
@@ -24,15 +24,15 @@ export class AppShell extends LitElement {
     const newLang = this.currentLanguage === 'en' ? 'tr' : 'en';
     changeLanguage(newLang);
     this.currentLanguage = newLang;
-    
+
     this.requestUpdate();
   }
 
   firstUpdated() {
     const outlet = this.shadowRoot.querySelector('#router-outlet');
-    
+
     if (outlet) {
-      import('../router.js').then(module => {
+      import('../router.js').then((module) => {
         module.AppRouter.init(outlet);
       });
     } else {
@@ -42,9 +42,11 @@ export class AppShell extends LitElement {
   static styles = css`
     :host {
       display: block;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        sans-serif;
       background-color: #f5f5f5;
+      min-width: 100%;
+      min-height: 100vh;
     }
 
     header {
@@ -82,7 +84,7 @@ export class AppShell extends LitElement {
     }
 
     .employees-text {
-      color: #FF6200;
+      color: #ff6200;
       font-size: 0.9rem;
       display: flex;
       align-items: center;
@@ -98,7 +100,7 @@ export class AppShell extends LitElement {
     }
 
     .add-new-btn {
-      background-color: #FF6200;
+      background-color: #ff6200;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
@@ -111,7 +113,7 @@ export class AppShell extends LitElement {
     }
 
     .add-new-btn:hover {
-      background-color: #FF6200;
+      background-color: #ff6200;
     }
 
     .container {
@@ -120,23 +122,11 @@ export class AppShell extends LitElement {
       margin: 0;
     }
 
-    main {
-      min-height: calc(100vh - 70px);
-    }
-
     #router-outlet {
-      background-color: white;
       margin: 0;
-      min-height: calc(100vh - 70px);
     }
 
     @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem 1.5rem;
-      }
-
       .employees-text {
         font-size: 0.8rem;
       }
@@ -158,9 +148,7 @@ export class AppShell extends LitElement {
           </div>
         </div>
         <div class="header-actions">
-          <div class="employees-text">
-            ${t('header.employees')}
-          </div>
+          <div class="employees-text">${t('header.employees')}</div>
           <a href="/add" class="add-new-btn">+ ${t('header.addEmployee')}</a>
           <div class="language-flag" @click="${this._toggleLanguage}">
             ${this.currentLanguage === 'tr' ? '🇹🇷' : '🇺🇸'}
@@ -170,8 +158,7 @@ export class AppShell extends LitElement {
 
       <main>
         <div class="container">
-          <div id="router-outlet">
-          </div>
+          <div id="router-outlet"></div>
         </div>
       </main>
     `;

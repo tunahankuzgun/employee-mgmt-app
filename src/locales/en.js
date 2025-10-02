@@ -1,6 +1,34 @@
 export default {
-  "header": {
-    "employees": "Employees",
-    "addEmployee": "Add Employee"
-  }
+  common: {
+    language: 'Language',
+    employeeManagement: 'Employee Management',
+  },
+  header: {
+    employees: 'Employees',
+    addEmployee: 'Add Employee',
+  },
+  employeeList: {
+    title: 'Employee List',
+    addEmployee: 'Add Employee',
+    searchPlaceholder: 'Search employees...',
+    tableView: 'Table',
+    listView: 'List',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    dateOfEmployment: 'Date of Employment',
+    dateOfBirth: 'Date of Birth',
+    phone: 'Phone',
+    email: 'Email',
+    department: 'Department',
+    position: 'Position',
+    actions: 'Actions',
+    edit: 'Edit',
+    delete: 'Delete',
+    noEmployees: 'No employees found',
+    previous: 'Previous',
+    next: 'Next',
+    showing: 'Showing',
+    of: 'of',
+    employees: 'employees',
+  },
 };

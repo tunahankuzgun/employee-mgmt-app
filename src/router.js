@@ -1,4 +1,4 @@
-import { Router } from '@vaadin/router';
+import {Router} from '@vaadin/router';
 
 /**
  * Application Router Configuration
@@ -11,33 +11,33 @@ export class AppRouter {
     }
 
     const router = new Router(outlet);
-    
+
     router.setRoutes([
       {
         path: '/',
         component: 'employee-list',
         action: () => {
           import('./components/employee-list.js');
-        }
+        },
       },
       {
         path: '/add',
         component: 'employee-form',
         action: () => {
           import('./components/employee-form.js');
-        }
+        },
       },
       {
         path: '/edit/:id',
         component: 'employee-form',
         action: () => {
           import('./components/employee-form.js');
-        }
+        },
       },
       {
         path: '(.*)',
-        redirect: '/'
-      }
+        redirect: '/',
+      },
     ]);
 
     return router;

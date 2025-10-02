@@ -1,6 +1,34 @@
 export default {
-  "header": {
-    "employees": "Çalışanlar",
-    "addEmployee": "Çalışan Ekle"
-  }
+  common: {
+    language: 'Dil',
+    employeeManagement: 'Çalışan Yönetimi',
+  },
+  header: {
+    employees: 'Çalışanlar',
+    addEmployee: 'Çalışan Ekle',
+  },
+  employeeList: {
+    title: 'Çalışan Listesi',
+    addEmployee: 'Çalışan Ekle',
+    searchPlaceholder: 'Çalışan ara...',
+    tableView: 'Tablo',
+    listView: 'Liste',
+    firstName: 'Ad',
+    lastName: 'Soyad',
+    dateOfEmployment: 'İşe Giriş Tarihi',
+    dateOfBirth: 'Doğum Tarihi',
+    phone: 'Telefon',
+    email: 'E-posta',
+    department: 'Departman',
+    position: 'Pozisyon',
+    actions: 'İşlemler',
+    edit: 'Düzenle',
+    delete: 'Sil',
+    noEmployees: 'Çalışan bulunamadı',
+    previous: 'Önceki',
+    next: 'Sonraki',
+    showing: 'Gösterilen',
+    of: 'toplam',
+    employees: 'çalışan',
+  },
 };
