@@ -60,6 +60,7 @@ export class AppShell extends LitElement {
     .logo-section {
       display: flex;
       align-items: center;
+      font-weight: 600;
       gap: 0.5rem;
     }
 
@@ -83,35 +84,26 @@ export class AppShell extends LitElement {
       gap: 1rem;
     }
 
-    .employees-text {
-      color: #ff6200;
-      font-size: 0.9rem;
+    .language-flag {
+      height: 100%;
       display: flex;
       align-items: center;
-      gap: 0.25rem;
-    }
-
-    .language-flag {
       font-size: 1.2rem;
       cursor: pointer;
       padding: 2px 4px;
     }
 
-    .add-new-btn {
-      background-color: #ff6200;
-      color: white;
+    .add-new-btn,
+    .employees-text {
+      color: #ff6200;
       border: none;
-      padding: 0.5rem 1rem;
       border-radius: 4px;
-      font-size: 0.85rem;
       cursor: pointer;
       text-decoration: none;
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: 500;
-    }
-
-    .add-new-btn:hover {
-      background-color: #ff6200;
     }
 
     .container {
@@ -146,13 +138,47 @@ export class AppShell extends LitElement {
           </div>
         </div>
         <div class="header-actions">
-          <div class="employees-text">${t('header.employees')}</div>
-          <a href="/add" class="add-new-btn">+ ${t('header.addEmployee')}</a>
+          <a class="employees-text" href="/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-user-icon lucide-user"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            ${t('header.employees')}
+          </a>
+          <a href="/add" class="add-new-btn"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-plus-icon lucide-plus"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            ${t('header.addEmployee')}</a
+          >
           <div class="language-flag" @click="${this._toggleLanguage}">
             ${this.currentLanguage === 'tr'
               ? html`<svg
-                  width="36"
-                  height="36"
+                  width="24"
+                  height="24"
                   viewBox="0 0 36 36"
                   xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -171,8 +197,8 @@ export class AppShell extends LitElement {
                   ></path>
                 </svg>`
               : html`<svg
-                  width="36"
-                  height="36"
+                  width="24"
+                  height="24"
                   viewBox="0 0 36 36"
                   xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"

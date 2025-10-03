@@ -188,7 +188,7 @@ export class EmployeeList extends LitElement {
     .employee-list-body {
       background-color: #fff;
       display: flex;
-      border-radius: 8px;
+      border-radius: 4px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       margin-bottom: 1rem;
       overflow: auto;
@@ -274,6 +274,11 @@ export class EmployeeList extends LitElement {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .table-firstname,
+    .table-lastname {
+      font-weight: 600;
     }
 
     input[type='checkbox'] {
@@ -414,8 +419,8 @@ export class EmployeeList extends LitElement {
               (emp) => html`
                 <tr>
                   <td><input type="checkbox" .value="${emp.id}" /></td>
-                  <td>${emp.firstName}</td>
-                  <td>${emp.lastName}</td>
+                  <td class="table-firstname">${emp.firstName}</td>
+                  <td class="table-lastname">${emp.lastName}</td>
                   <td>${this._formatDate(emp.dateOfEmployment)}</td>
                   <td>${this._formatDate(emp.dateOfBirth)}</td>
                   <td>${emp.phone}</td>
