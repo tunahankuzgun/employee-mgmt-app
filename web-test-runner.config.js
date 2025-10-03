@@ -98,6 +98,21 @@ export default {
       timeout: '60000',
     },
   },
+  // Custom HTML template to inject global variables
+  testRunnerHtml: testFramework => `
+    <html>
+      <head>
+        <script>
+          // Polyfill Node.js globals for browser environment
+          window.process = window.process || { env: { NODE_ENV: 'test' } };
+          window.global = window.global || window;
+        </script>
+      </head>
+      <body>
+        <script type="module" src="${testFramework}"></script>
+      </body>
+    </html>
+  `,
   plugins: [
     // Detect browsers without modules (e.g. IE11) and transform to SystemJS
     // (https://modern-web.dev/docs/dev-server/plugins/legacy/).

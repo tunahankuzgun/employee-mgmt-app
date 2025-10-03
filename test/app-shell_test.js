@@ -18,7 +18,7 @@ suite('AppShell', () => {
   test('has default properties', async () => {
     const element = await fixture(html`<app-shell></app-shell>`);
     assert.equal(element.currentPath, window.location.pathname);
-    assert.isTrue(['en', 'tr'].includes(element.currentLanguage));
+    assert.isTrue(element.currentPath !== undefined);
   });
 
   test('renders header', async () => {
@@ -44,11 +44,12 @@ suite('AppShell', () => {
     assert.isNotNull(outlet);
   });
 
-  test('has language toggle flag', async () => {
+  test('contains language selector component', async () => {
     const element = await fixture(html`<app-shell></app-shell>`);
     await element.updateComplete;
-    const languageFlag = element.shadowRoot.querySelector('.language-flag');
-    assert.isNotNull(languageFlag);
+    const languageSelector =
+      element.shadowRoot.querySelector('language-selector');
+    assert.isNotNull(languageSelector);
   });
 
   test('has CSS styles defined', async () => {
@@ -62,37 +63,6 @@ suite('AppShell', () => {
     await element.updateComplete;
     const navigationMenu = element.shadowRoot.querySelector('navigation-menu');
     assert.isNotNull(navigationMenu);
-  });
-
-  test('sets language from document.documentElement.lang', async () => {
-    const originalLang = document.documentElement.lang;
-    document.documentElement.lang = 'tr';
-
-    const element = await fixture(html`<app-shell></app-shell>`);
-    assert.equal(element.currentLanguage, 'tr');
-
-    document.documentElement.lang = originalLang;
-  });
-
-  test('defaults to "en" if no language is set', async () => {
-    const originalLang = document.documentElement.lang;
-    document.documentElement.lang = '';
-
-    const element = await fixture(html`<app-shell></app-shell>`);
-    assert.equal(element.currentLanguage, 'en');
-
-    document.documentElement.lang = originalLang;
-  });
-
-  test('_toggleLanguage method exists and can be called', async () => {
-    const element = await fixture(html`<app-shell></app-shell>`);
-    assert.isFunction(element._toggleLanguage);
-
-    const initialLang = element.currentLanguage;
-    const newLang = initialLang === 'en' ? 'tr' : 'en';
-    element.currentLanguage = newLang;
-    await element.updateComplete;
-    assert.notEqual(element.currentLanguage, initialLang);
   });
 
   test('firstUpdated method exists and initializes router outlet', async () => {

@@ -1,16 +1,22 @@
 import i18next from 'i18next';
+import {store} from '../store/index.js';
+import {
+  setLanguage,
+  setInitialized,
+  selectCurrentLanguage,
+} from '../store/slices/languageSlice.js';
 
 /**
- * Initialize i18next
+ * Initialize i18next with Redux integration
  */
 export async function initI18n() {
-  const language = document.documentElement.lang || 'en';
+  const currentLanguage = selectCurrentLanguage(store.getState());
 
   const en = await import('../locales/en.js');
   const tr = await import('../locales/tr.js');
 
   await i18next.init({
-    lng: language,
+    lng: currentLanguage,
     fallbackLng: 'en',
     resources: {
       en: {translation: en.default},
@@ -19,6 +25,19 @@ export async function initI18n() {
     interpolation: {
       escapeValue: false,
     },
+  });
+
+  store.dispatch(setInitialized(true));
+
+  let previousLanguage = currentLanguage;
+  store.subscribe(() => {
+    const state = store.getState();
+    const newLanguage = selectCurrentLanguage(state);
+
+    if (newLanguage !== previousLanguage) {
+      i18next.changeLanguage(newLanguage);
+      previousLanguage = newLanguage;
+    }
   });
 
   return i18next;
@@ -35,18 +54,11 @@ export function t(key, options = {}) {
 }
 
 /**
- * Change language
+ * Change language via Redux store
  * @param {string} language - Language code
  */
 export function changeLanguage(language) {
-  i18next.changeLanguage(language);
-  document.documentElement.lang = language;
-
-  document.dispatchEvent(
-    new CustomEvent('language-changed', {
-      detail: {language},
-    })
-  );
+  store.dispatch(setLanguage(language));
 }
 
 /**

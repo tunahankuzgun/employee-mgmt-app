@@ -4,6 +4,7 @@
  */
 
 import './src/components/app-shell.js';
+import './src/store/index.js';
 import {initI18n} from './src/utils/i18n.js';
 
 console.log('Employee Management App - Starting...');

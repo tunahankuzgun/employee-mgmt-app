@@ -1,10 +1,11 @@
 import {LitElement, html, css} from 'lit';
+import {ReduxMixin} from '../mixins/ReduxMixin.js';
 import {t} from '../utils/i18n.js';
 
 /**
  * Navigation Menu - Navigation component for app routing
  */
-export class NavigationMenu extends LitElement {
+export class NavigationMenu extends ReduxMixin(LitElement) {
   static properties = {
     currentPath: {type: String},
   };
@@ -17,6 +18,13 @@ export class NavigationMenu extends LitElement {
       this.currentPath = e.detail.location.pathname;
     });
   }
+
+  /**
+   * Handle Redux state changes
+   * @param {Object} state - Current Redux state
+   */
+  // eslint-disable-next-line no-unused-vars
+  stateChanged(state) {}
 
   static styles = css`
     :host {

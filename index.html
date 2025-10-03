@@ -5,6 +5,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee Management Application</title>
+    <script>
+      // Polyfill for process object needed by Redux Toolkit/Immer
+      if (typeof global === 'undefined') {
+        var global = globalThis;
+      }
+      if (typeof process === 'undefined') {
+        var process = { env: { NODE_ENV: 'development' } };
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -1,10 +1,11 @@
-import {t} from 'i18next';
+import {t} from '../utils/i18n.js';
 import {LitElement, html, css} from 'lit';
+import {ReduxMixin} from '../mixins/ReduxMixin.js';
 
 /**
  * Employee List Component
  */
-export class EmployeeList extends LitElement {
+export class EmployeeList extends ReduxMixin(LitElement) {
   static properties = {
     employees: {type: Array},
     filteredEmployees: {type: Array},
@@ -25,6 +26,13 @@ export class EmployeeList extends LitElement {
       this.filteredEmployees.length / this.itemsPerPage
     );
   }
+
+  /**
+   * Handle Redux state changes
+   * @param {Object} state - Current Redux state
+   */
+  // eslint-disable-next-line no-unused-vars
+  stateChanged(state) {}
 
   _getMockData() {
     const departments = ['Analytics', 'Tech'];
@@ -739,7 +747,7 @@ export class EmployeeList extends LitElement {
     return html`
       <div class="employee-list-container">
         <div class="employee-list-header">
-          <h2>Employee List</h2>
+          <h2>${t('employeeList.title', 'Employee List')}</h2>
           <div class="employee-list-actions">
             <div>
               <svg
@@ -803,15 +811,17 @@ export class EmployeeList extends LitElement {
               <th>
                 <input type="checkbox" @change="${this._handleSelectAll}" />
               </th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Date of Employment</th>
-              <th>Date of Birth</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Department</th>
-              <th>Position</th>
-              <th>Actions</th>
+              <th>${t('employeeList.firstName', 'First Name')}</th>
+              <th>${t('employeeList.lastName', 'Last Name')}</th>
+              <th>
+                ${t('employeeList.dateOfEmployment', 'Date of Employment')}
+              </th>
+              <th>${t('employeeList.dateOfBirth', 'Date of Birth')}</th>
+              <th>${t('employeeList.phone', 'Phone')}</th>
+              <th>${t('employeeList.email', 'Email')}</th>
+              <th>${t('employeeList.department', 'Department')}</th>
+              <th>${t('employeeList.position', 'Position')}</th>
+              <th>${t('employeeList.actions', 'Actions')}</th>
             </tr>
           </thead>
           <tbody class="table-body">
