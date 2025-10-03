@@ -226,17 +226,23 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     .employee-list-actions {
       display: flex;
       cursor: pointer;
-      color: #ff620040;
       gap: 1rem;
       align-items: center;
       flex-wrap: wrap;
     }
 
-    .employee-list-actions svg.active {
+    .employee-list-actions button {
+      color: #ff620040;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .employee-list-actions button.active {
       color: #ff6200;
     }
 
-    .employee-list-actions svg:hover {
+    .employee-list-actions button:hover {
       scale: 1.1;
     }
 
@@ -557,10 +563,6 @@ export class EmployeeList extends ReduxMixin(LitElement) {
         margin: 0;
       }
 
-      .employee-list-actions {
-        justify-content: center;
-      }
-
       .employee-table {
         min-width: 650px;
         font-size: 0.6875rem;
@@ -723,6 +725,8 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     .pagination-next,
     .pagination-prev {
       height: 100%;
+      background: none;
+      border: none;
     }
 
     .pagination-item {
@@ -749,9 +753,11 @@ export class EmployeeList extends ReduxMixin(LitElement) {
         <div class="employee-list-header">
           <h2>${t('employeeList.title', 'Employee List')}</h2>
           <div class="employee-list-actions">
-            <div>
+            <button
+              @click="${() => this._handleViewModeChange('table')}"
+              class="${this.viewMode === 'table' ? 'active' : ''}"
+            >
               <svg
-                @click="${() => this._handleViewModeChange('table')}"
                 xmlns="http://www.w3.org/2000/svg"
                 width="36"
                 height="36"
@@ -761,17 +767,17 @@ export class EmployeeList extends ReduxMixin(LitElement) {
                 stroke-width="1.25"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="${this.viewMode === 'table' ? 'active' : ''}"
               >
                 <path d="M3 5h18" />
                 <path d="M3 12h18" />
                 <path d="M3 19h18" />
               </svg>
-            </div>
-            <div>
+            </button>
+            <button
+              @click="${() => this._handleViewModeChange('list')}"
+              class="${this.viewMode === 'list' ? 'active' : ''}"
+            >
               <svg
-                @click="${() => this._handleViewModeChange('list')}"
-                class="${this.viewMode === 'list' ? 'active' : ''}"
                 xmlns="http://www.w3.org/2000/svg"
                 width="36"
                 height="36"
@@ -789,7 +795,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
                 <path d="M9 3v18" />
                 <path d="M15 3v18" />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
         ${this.viewMode === 'table'
@@ -907,7 +913,13 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     return html`
       <div class="pagination-section">
         <div class="pagination">
-          <div>
+          <button
+            class="pagination-prev"
+            @click="${() =>
+              this.currentPage !== 1
+                ? this._handlePageChange(this.currentPage - 1)
+                : null}"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -919,15 +931,10 @@ export class EmployeeList extends ReduxMixin(LitElement) {
               stroke-linecap="round"
               stroke-linejoin="round"
               color="${this.currentPage === 1 ? 'gray' : '#ff6200'}"
-              class="pagination-prev"
-              @click="${() =>
-                this.currentPage !== 1
-                  ? this._handlePageChange(this.currentPage - 1)
-                  : null}"
             >
               <path d="m15 18-6-6 6-6" />
             </svg>
-          </div>
+          </button>
           ${pages.map((page) => {
             if (page === '...') {
               return html` <div class="pagination-ellipsis">...</div> `;
@@ -943,7 +950,13 @@ export class EmployeeList extends ReduxMixin(LitElement) {
               </div>
             `;
           })}
-          <div>
+          <button
+            @click="${() =>
+              this.currentPage !== this.totalPages
+                ? this._handlePageChange(this.currentPage + 1)
+                : null}"
+            class="pagination-next"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -957,15 +970,10 @@ export class EmployeeList extends ReduxMixin(LitElement) {
               color="${this.currentPage === this.totalPages
                 ? 'gray'
                 : '#ff6200'}"
-              class="pagination-next"
-              @click="${() =>
-                this.currentPage !== this.totalPages
-                  ? this._handlePageChange(this.currentPage + 1)
-                  : null}"
             >
               <path d="m9 18 6-6-6-6" />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
     `;
