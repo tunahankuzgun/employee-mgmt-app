@@ -862,7 +862,7 @@ export class EmployeeList extends LitElement {
                           stroke-width="2"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          class="btn"
+                          class="btn btn-delete-table"
                           @click="${() => this._handleDelete(emp)}"
                         >
                           <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
