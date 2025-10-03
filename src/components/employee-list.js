@@ -128,6 +128,43 @@ export class EmployeeList extends LitElement {
     this.currentPage = page;
   }
 
+  _getPagination() {
+    const current = this.currentPage;
+    const total = this.totalPages;
+
+    if (total <= 6) {
+      return Array.from({length: total}, (_, i) => i + 1);
+    }
+
+    const pages = [];
+
+    pages.push(1);
+
+    if (current <= 3) {
+      for (let i = 2; i <= 4; i++) {
+        pages.push(i);
+      }
+      if (total > 5) {
+        pages.push('...');
+      }
+      pages.push(total);
+    } else if (current >= total - 2) {
+      pages.push('...');
+      for (let i = total - 3; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push('...');
+      for (let i = current - 1; i <= current + 1; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(total);
+    }
+
+    return pages;
+  }
+
   _getPaginatedEmployees() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
@@ -458,6 +495,12 @@ export class EmployeeList extends LitElement {
       cursor: pointer;
     }
 
+    .pagination-ellipsis {
+      padding: 0.25rem 0.6rem;
+      color: #666;
+      cursor: default;
+    }
+
     .pagination svg {
       cursor: pointer;
     }
@@ -622,7 +665,7 @@ export class EmployeeList extends LitElement {
       `;
     }
 
-    const pages = Array.from({length: this.totalPages}, (_, i) => i + 1);
+    const pages = this._getPagination();
 
     return html`
       <div class="pagination-section">
@@ -648,8 +691,11 @@ export class EmployeeList extends LitElement {
               <path d="m15 18-6-6 6-6" />
             </svg>
           </div>
-          ${pages.map(
-            (page) => html`
+          ${pages.map((page) => {
+            if (page === '...') {
+              return html` <div class="pagination-ellipsis">...</div> `;
+            }
+            return html`
               <div
                 class="${page === this.currentPage
                   ? 'active'
@@ -658,8 +704,8 @@ export class EmployeeList extends LitElement {
               >
                 ${page}
               </div>
-            `
-          )}
+            `;
+          })}
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
