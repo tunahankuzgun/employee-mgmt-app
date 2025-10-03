@@ -19,7 +19,6 @@ export default {
   employeeList: {
     title: 'Employee List',
     addEmployee: 'Add Employee',
-    searchPlaceholder: 'Search employees...',
     tableView: 'Table',
     listView: 'List',
     firstName: 'First Name',

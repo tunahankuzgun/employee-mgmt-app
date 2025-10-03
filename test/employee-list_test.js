@@ -286,7 +286,7 @@ suite('Data Formatting', () => {
 });
 
 suite('Component State Management', () => {
-  test('can modify employees array and updates filteredEmployees', async () => {
+  test('can modify employees array and updates component', async () => {
     const element = await fixture(html`<employee-list></employee-list>`);
 
     const originalCount = element.employees.length;
@@ -304,11 +304,9 @@ suite('Component State Management', () => {
     };
 
     element.employees = [...element.employees, newEmployee];
-    element.filteredEmployees = [...element.employees];
     await element.updateComplete;
 
     assert.equal(element.employees.length, originalCount + 1);
-    assert.equal(element.filteredEmployees.length, originalCount + 1);
   });
 
   test('totalPages updates when employees change', async () => {
@@ -330,9 +328,8 @@ suite('Component State Management', () => {
     }));
 
     element.employees = [...element.employees, ...manyEmployees];
-    element.filteredEmployees = [...element.employees];
     element.totalPages = Math.ceil(
-      element.filteredEmployees.length / element.itemsPerPage
+      element.employees.length / element.itemsPerPage
     );
     await element.updateComplete;
 

@@ -19,7 +19,6 @@ export default {
   employeeList: {
     title: 'Çalışan Listesi',
     addEmployee: 'Çalışan Ekle',
-    searchPlaceholder: 'Çalışan ara...',
     tableView: 'Tablo',
     listView: 'Liste',
     firstName: 'Ad',
