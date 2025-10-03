@@ -117,6 +117,11 @@ export class EmployeeList extends LitElement {
 
   _handleViewModeChange(mode) {
     this.viewMode = mode;
+    this.itemsPerPage = mode === 'list' ? 4 : 10;
+    this.totalPages = Math.ceil(
+      this.filteredEmployees.length / this.itemsPerPage
+    );
+    this.currentPage = 1;
   }
 
   _handlePageChange(page) {
@@ -194,6 +199,131 @@ export class EmployeeList extends LitElement {
       overflow: auto;
       width: 100%;
       height: 100%;
+    }
+
+    .list-container {
+      display: grid;
+      grid-template-columns: auto auto;
+      width: 85%;
+      gap: 6rem 2rem;
+      padding: 1rem;
+      margin: 0 auto;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .employee-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .card-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .field-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .field-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: gray;
+      letter-spacing: 0.05em;
+    }
+
+    .field-group span {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: start;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .card-actions svg {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+    }
+
+    .card-actions .btn:hover {
+      scale: 1.1;
+    }
+
+    .btn-delete {
+      background-color: #ff6200;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-edit-list {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    @media (max-width: 1440px) {
+      .employee-table .table-body td {
+        padding: 14.4px 0.5rem !important;
+      }
+      .list-container {
+        gap: 2rem !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .list-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0.75rem;
+      }
+
+      .card-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .card-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
     }
 
     .employee-table {
@@ -462,7 +592,7 @@ export class EmployeeList extends LitElement {
                           stroke-width="2"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          class="btn btn-delete"
+                          class="btn"
                           @click="${() => this._handleDelete(emp)}"
                         >
                           <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
@@ -571,7 +701,7 @@ export class EmployeeList extends LitElement {
                     <span>${emp.firstName}</span>
                   </div>
                   <div class="field-group">
-                    <label>${t('employeeList.lastName', 'Last Name')}:</label>
+                    <label>${t('employeeList.lastName', 'Last Name')}</label>
                     <span>${emp.lastName}</span>
                   </div>
                 </div>
@@ -582,13 +712,13 @@ export class EmployeeList extends LitElement {
                       >${t(
                         'employeeList.dateOfEmployment',
                         'Date of Employment'
-                      )}:</label
+                      )}</label
                     >
                     <span>${this._formatDate(emp.dateOfEmployment)}</span>
                   </div>
                   <div class="field-group">
                     <label
-                      >${t('employeeList.dateOfBirth', 'Date of Birth')}:</label
+                      >${t('employeeList.dateOfBirth', 'Date of Birth')}</label
                     >
                     <span>${this._formatDate(emp.dateOfBirth)}</span>
                   </div>
@@ -596,30 +726,31 @@ export class EmployeeList extends LitElement {
 
                 <div class="card-row">
                   <div class="field-group">
-                    <label>${t('employeeList.phone', 'Phone')}:</label>
+                    <label>${t('employeeList.phone', 'Phone')}</label>
                     <span>${emp.phone}</span>
                   </div>
                   <div class="field-group">
-                    <label>${t('employeeList.email', 'Email')}:</label>
+                    <label>${t('employeeList.email', 'Email')}</label>
                     <span>${emp.email}</span>
                   </div>
                 </div>
 
                 <div class="card-row">
                   <div class="field-group">
-                    <label
-                      >${t('employeeList.department', 'Department')}:</label
-                    >
+                    <label>${t('employeeList.department', 'Department')}</label>
                     <span>${emp.department}</span>
                   </div>
                   <div class="field-group">
-                    <label>${t('employeeList.position', 'Position')}:</label>
+                    <label>${t('employeeList.position', 'Position')}</label>
                     <span>${emp.position}</span>
                   </div>
                 </div>
 
                 <div class="card-actions">
-                  <div>
+                  <button
+                    @click="${() => this._handleEdit(emp)}"
+                    class="btn btn-edit-list"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -630,8 +761,6 @@ export class EmployeeList extends LitElement {
                       stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="btn btn-edit"
-                      @click="${() => this._handleEdit(emp)}"
                     >
                       <path
                         d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
@@ -640,12 +769,28 @@ export class EmployeeList extends LitElement {
                         d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
                       />
                     </svg>
-                  </div>
+                    ${t('employeeList.edit', 'Edit')}
+                  </button>
                   <button
                     class="btn btn-delete"
                     @click="${() => this._handleDelete(emp)}"
                   >
-                    🗑️ ${t('employeeList.delete', 'Delete')}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#ffffff"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                      <path d="M3 6h18" />
+                      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                    ${t('employeeList.delete', 'Delete')}
                   </button>
                 </div>
               </div>
