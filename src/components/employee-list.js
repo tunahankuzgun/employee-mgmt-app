@@ -345,21 +345,243 @@ export class EmployeeList extends LitElement {
     }
 
     @media (max-width: 768px) {
+      :host {
+        padding: 0 1rem;
+        overflow-x: hidden;
+      }
+
+      .employee-list-header {
+        margin-bottom: 1rem;
+      }
+
+      .employee-list-header h2 {
+        font-size: 1.25rem;
+      }
+
+      .employee-list-actions {
+        gap: 0.5rem;
+      }
+
+      .employee-list-actions svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .employee-list-body {
+        overflow-x: auto;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .employee-list-body::after {
+        display: block;
+      }
+
+      .employee-table {
+        min-width: 750px;
+        font-size: 0.75rem;
+      }
+
+      .table-header th {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+      }
+
+      .table-body td {
+        padding: 0.75rem 0.25rem;
+        font-size: 0.75rem;
+      }
+
+      th:nth-child(1),
+      td:nth-child(1) {
+        width: 35px;
+      }
+      th:nth-child(2),
+      td:nth-child(2) {
+        width: 65px;
+        max-width: 65px;
+      }
+      th:nth-child(3),
+      td:nth-child(3) {
+        width: 65px;
+        max-width: 65px;
+      }
+      th:nth-child(4),
+      td:nth-child(4) {
+        width: 80px;
+        max-width: 80px;
+      }
+      th:nth-child(5),
+      td:nth-child(5) {
+        width: 80px;
+        max-width: 80px;
+      }
+      th:nth-child(6),
+      td:nth-child(6) {
+        width: 105px;
+        max-width: 105px;
+      }
+      th:nth-child(7),
+      td:nth-child(7) {
+        width: 150px;
+        max-width: 150px;
+      }
+      th:nth-child(8),
+      td:nth-child(8) {
+        width: 75px;
+        max-width: 75px;
+      }
+      th:nth-child(9),
+      td:nth-child(9) {
+        width: 75px;
+        max-width: 75px;
+      }
+      th:nth-child(10),
+      td:nth-child(10) {
+        width: 70px;
+        max-width: 70px;
+      }
+
+      .actions {
+        gap: 0.25rem;
+      }
+
+      .actions svg {
+        width: 18px;
+        height: 18px;
+      }
+
       .list-container {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1rem;
+        padding: 0.4rem;
+        width: 100%;
+        margin-left: -0.5rem;
+      }
+
+      .employee-card {
         padding: 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-content {
+        gap: 0.5rem;
       }
 
       .card-row {
         flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .field-group {
+        gap: 0.125rem;
+      }
+
+      .field-group label {
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .field-group span {
+        font-size: 0.8125rem;
+        word-break: break-word;
+      }
+
+      .card-actions {
+        flex-direction: row;
         gap: 0.5rem;
+        margin-top: 0.5rem;
+        justify-content: space-between;
+      }
+
+      .btn-delete,
+      .btn-edit-list {
+        flex: 1;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 6px;
+        justify-content: center;
+      }
+
+      .btn-delete svg,
+      .btn-edit-list svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .pagination {
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .pagination-item {
+        padding: 0.25rem 0.5rem;
+        text-align: center;
+      }
+
+      .pagination svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      :host {
+        padding: 0 0.5rem;
+      }
+
+      .employee-list-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+      }
+
+      .employee-list-header h2 {
+        font-size: 1.125rem;
+        margin: 0;
+      }
+
+      .employee-list-actions {
+        justify-content: center;
+      }
+
+      .employee-table {
+        min-width: 650px;
+        font-size: 0.6875rem;
+      }
+
+      .table-header th {
+        padding: 0.375rem 0.125rem;
+        font-size: 0.6875rem;
+      }
+
+      .table-body td {
+        padding: 0.5rem 0.125rem;
+        font-size: 0.6875rem;
+      }
+
+      .employee-card {
+        padding: 0.5rem;
       }
 
       .card-actions {
         flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
+        gap: 0.5rem;
+      }
+
+      .btn-delete,
+      .btn-edit-list {
+        flex: none;
+        width: 100%;
+      }
+
+      .pagination {
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 0.25rem 0;
       }
     }
 

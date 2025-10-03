@@ -93,6 +93,12 @@ export class AppShell extends LitElement {
       padding: 2px 4px;
     }
 
+    @media (max-width: 425px) {
+      .header-actions span {
+        display: none;
+      }
+    }
+
     .add-new-btn,
     .employees-text {
       color: #ff6200;
@@ -154,7 +160,7 @@ export class AppShell extends LitElement {
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
-            ${t('header.employees')}
+            <span class="text"> ${t('header.employees')} </span>
           </a>
           <a href="/add" class="add-new-btn"
             ><svg
@@ -172,8 +178,8 @@ export class AppShell extends LitElement {
               <path d="M5 12h14" />
               <path d="M12 5v14" />
             </svg>
-            ${t('header.addEmployee')}</a
-          >
+            <span class="text"> ${t('header.addEmployee')} </span>
+          </a>
           <div class="language-flag" @click="${this._toggleLanguage}">
             ${this.currentLanguage === 'tr'
               ? html`<svg
