@@ -57,13 +57,11 @@ suite('AppShell', () => {
     assert.isTrue(element.constructor.styles !== undefined);
   });
 
-  test('renders navigation links', async () => {
+  test('renders navigation menu component', async () => {
     const element = await fixture(html`<app-shell></app-shell>`);
     await element.updateComplete;
-    const employeeListLink = element.shadowRoot.querySelector('a[href="/"]');
-    const addEmployeeLink = element.shadowRoot.querySelector('a[href="/add"]');
-    assert.isNotNull(employeeListLink);
-    assert.isNotNull(addEmployeeLink);
+    const navigationMenu = element.shadowRoot.querySelector('navigation-menu');
+    assert.isNotNull(navigationMenu);
   });
 
   test('sets language from document.documentElement.lang', async () => {
@@ -113,16 +111,6 @@ suite('AppShell', () => {
     await element.updateComplete;
     assert.equal(element.currentPath, '/test-path');
     assert.notEqual(element.currentPath, initialPath);
-  });
-
-  test('renders employee and add employee link texts', async () => {
-    const element = await fixture(html`<app-shell></app-shell>`);
-    await element.updateComplete;
-
-    const employeeText = element.shadowRoot.querySelector('.employees-text');
-    const addBtn = element.shadowRoot.querySelector('.add-new-btn');
-    assert.isNotNull(employeeText);
-    assert.isNotNull(addBtn);
   });
 
   test('logo image exists in header', async () => {

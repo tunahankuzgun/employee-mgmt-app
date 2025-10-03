@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
-import {changeLanguage, t} from '../utils/i18n.js';
+import {changeLanguage} from '../utils/i18n.js';
+import './navigation-menu.js';
 
 /**
  * App Shell - Main application container with modern dashboard design
@@ -99,19 +100,6 @@ export class AppShell extends LitElement {
       }
     }
 
-    .add-new-btn,
-    .employees-text {
-      color: #ff6200;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 500;
-    }
-
     .container {
       padding: 0;
       max-width: none;
@@ -120,17 +108,6 @@ export class AppShell extends LitElement {
 
     #router-outlet {
       margin: 0;
-    }
-
-    @media (max-width: 768px) {
-      .employees-text {
-        font-size: 0.8rem;
-      }
-
-      .add-new-btn {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-      }
     }
   `;
 
@@ -144,42 +121,7 @@ export class AppShell extends LitElement {
           </div>
         </div>
         <div class="header-actions">
-          <a class="employees-text" href="/">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-user-icon lucide-user"
-            >
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            <span class="text"> ${t('header.employees')} </span>
-          </a>
-          <a href="/add" class="add-new-btn"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-plus-icon lucide-plus"
-            >
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
-            </svg>
-            <span class="text"> ${t('header.addEmployee')} </span>
-          </a>
+          <navigation-menu .currentPath="${this.currentPath}"></navigation-menu>
           <div class="language-flag" @click="${this._toggleLanguage}">
             ${this.currentLanguage === 'tr'
               ? html`<svg
