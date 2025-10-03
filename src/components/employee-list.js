@@ -27,6 +27,9 @@ export class EmployeeList extends LitElement {
   }
 
   _getMockData() {
+    const departments = ['Analytics', 'Tech'];
+    const positions = ['Junior', 'Medior', 'Senior'];
+
     return [
       {
         id: 1,
@@ -34,8 +37,8 @@ export class EmployeeList extends LitElement {
         lastName: 'Doe',
         email: 'john.doe@company.com',
         phone: '+(90) 532 123 45 67',
-        department: 'Engineering',
-        position: 'Senior Developer',
+        department: 'Tech',
+        position: 'Senior',
         dateOfEmployment: '2023-01-15',
         dateOfBirth: '1990-05-12',
         salary: 75000,
@@ -46,8 +49,8 @@ export class EmployeeList extends LitElement {
         lastName: 'Smith',
         email: 'jane.smith@company.com',
         phone: '+(90) 532 123 45 68',
-        department: 'Marketing',
-        position: 'Marketing Manager',
+        department: 'Analytics',
+        position: 'Medior',
         dateOfEmployment: '2022-08-20',
         dateOfBirth: '1988-11-23',
         salary: 65000,
@@ -70,8 +73,8 @@ export class EmployeeList extends LitElement {
         lastName: 'Johnson',
         email: 'sarah.johnson@company.com',
         phone: '+(90) 532 123 45 69',
-        department: 'HR',
-        position: 'HR Specialist',
+        department: 'Tech',
+        position: 'Junior',
         dateOfEmployment: '2022-11-05',
         dateOfBirth: '1992-07-08',
         salary: 55000,
@@ -82,8 +85,8 @@ export class EmployeeList extends LitElement {
         lastName: 'Brown',
         email: 'michael.brown@company.com',
         phone: '+(90) 532 123 45 70',
-        department: 'Engineering',
-        position: 'DevOps Engineer',
+        department: 'Tech',
+        position: 'Senior',
         dateOfEmployment: '2023-06-01',
         dateOfBirth: '1987-12-19',
         salary: 70000,
@@ -94,20 +97,22 @@ export class EmployeeList extends LitElement {
         lastName: 'Kaya',
         email: 'ayse.kaya@company.com',
         phone: '+(90) 532 123 45 71',
-        department: 'Finance',
-        position: 'Financial Analyst',
+        department: 'Analytics',
+        position: 'Medior',
         dateOfEmployment: '2022-12-15',
         dateOfBirth: '1991-04-27',
         salary: 60000,
       },
       ...Array.from({length: 50}, (_, i) => ({
         id: i + 7,
-        firstName: 'Ahmet',
-        lastName: 'Sourtimes',
-        email: 'ahmet@sourtimes.org',
-        phone: '+(90) 532 123 45 67',
-        department: 'Analytics',
-        position: 'Junior',
+        firstName: 'Employee',
+        lastName: `${i + 7}`,
+        email: `employee${i + 7}@company.com`,
+        phone: `+(90) 532 123 ${String(45 + i).padStart(2, '0')} ${String(
+          67 + i
+        ).padStart(2, '0')}`,
+        department: departments[i % departments.length],
+        position: positions[i % positions.length],
         dateOfEmployment: '2023-09-23',
         dateOfBirth: '1995-03-15',
         salary: 45000 + i * 1000,
