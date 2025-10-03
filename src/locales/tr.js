@@ -7,6 +7,15 @@ export default {
     employees: 'Çalışanlar',
     addEmployee: 'Çalışan Ekle',
   },
+  departments: {
+    analytics: 'Analiz',
+    tech: 'Teknoloji',
+  },
+  positions: {
+    junior: 'Kıdemsiz',
+    medior: 'Orta',
+    senior: 'Kıdemli',
+  },
   employeeList: {
     title: 'Çalışan Listesi',
     addEmployee: 'Çalışan Ekle',

@@ -1,6 +1,8 @@
 import {t} from '../utils/i18n.js';
 import {LitElement, html, css} from 'lit';
 import {ReduxMixin} from '../mixins/ReduxMixin.js';
+import {selectEmployees} from '../store/slices/employeesSlice.js';
+import {getDepartmentName, getPositionName} from '../utils/employeeHelpers.js';
 
 /**
  * Employee List Component
@@ -8,7 +10,6 @@ import {ReduxMixin} from '../mixins/ReduxMixin.js';
 export class EmployeeList extends ReduxMixin(LitElement) {
   static properties = {
     employees: {type: Array},
-    filteredEmployees: {type: Array},
     viewMode: {type: String},
     currentPage: {type: Number},
     itemsPerPage: {type: Number},
@@ -17,122 +18,34 @@ export class EmployeeList extends ReduxMixin(LitElement) {
 
   constructor() {
     super();
-    this.employees = this._getMockData();
-    this.filteredEmployees = [...this.employees];
+    this.employees = [];
     this.viewMode = 'table';
     this.currentPage = 1;
     this.itemsPerPage = 10;
-    this.totalPages = Math.ceil(
-      this.filteredEmployees.length / this.itemsPerPage
-    );
+    this.totalPages = 0;
   }
 
   /**
    * Handle Redux state changes
    * @param {Object} state - Current Redux state
    */
-  // eslint-disable-next-line no-unused-vars
-  stateChanged(state) {}
+  stateChanged(state) {
+    const employees = selectEmployees(state);
 
-  _getMockData() {
-    const departments = ['Analytics', 'Tech'];
-    const positions = ['Junior', 'Medior', 'Senior'];
-
-    return [
-      {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@company.com',
-        phone: '+(90) 532 123 45 67',
-        department: 'Tech',
-        position: 'Senior',
-        dateOfEmployment: '2023-01-15',
-        dateOfBirth: '1990-05-12',
-        salary: 75000,
-      },
-      {
-        id: 2,
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane.smith@company.com',
-        phone: '+(90) 532 123 45 68',
-        department: 'Analytics',
-        position: 'Medior',
-        dateOfEmployment: '2022-08-20',
-        dateOfBirth: '1988-11-23',
-        salary: 65000,
-      },
-      {
-        id: 3,
-        firstName: 'Ahmet',
-        lastName: 'Sourtimes',
-        email: 'ahmet@sourtimes.org',
-        phone: '+(90) 532 123 45 67',
-        department: 'Analytics',
-        position: 'Junior',
-        dateOfEmployment: '2023-09-23',
-        dateOfBirth: '1995-03-15',
-        salary: 50000,
-      },
-      {
-        id: 4,
-        firstName: 'Sarah',
-        lastName: 'Johnson',
-        email: 'sarah.johnson@company.com',
-        phone: '+(90) 532 123 45 69',
-        department: 'Tech',
-        position: 'Junior',
-        dateOfEmployment: '2022-11-05',
-        dateOfBirth: '1992-07-08',
-        salary: 55000,
-      },
-      {
-        id: 5,
-        firstName: 'Michael',
-        lastName: 'Brown',
-        email: 'michael.brown@company.com',
-        phone: '+(90) 532 123 45 70',
-        department: 'Tech',
-        position: 'Senior',
-        dateOfEmployment: '2023-06-01',
-        dateOfBirth: '1987-12-19',
-        salary: 70000,
-      },
-      {
-        id: 6,
-        firstName: 'Ayşe',
-        lastName: 'Kaya',
-        email: 'ayse.kaya@company.com',
-        phone: '+(90) 532 123 45 71',
-        department: 'Analytics',
-        position: 'Medior',
-        dateOfEmployment: '2022-12-15',
-        dateOfBirth: '1991-04-27',
-        salary: 60000,
-      },
-      ...Array.from({length: 50}, (_, i) => ({
-        id: i + 7,
-        firstName: 'Employee',
-        lastName: `${i + 7}`,
-        email: `employee${i + 7}@company.com`,
-        phone: `+(90) 532 123 ${String(45 + i).padStart(2, '0')} ${String(
-          67 + i
-        ).padStart(2, '0')}`,
-        department: departments[i % departments.length],
-        position: positions[i % positions.length],
-        dateOfEmployment: '2023-09-23',
-        dateOfBirth: '1995-03-15',
-        salary: 45000 + i * 1000,
-      })),
-    ];
+    if (employees && employees !== this.employees) {
+      this.employees = employees;
+      this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = 1;
+      }
+    }
   }
 
   _handleViewModeChange(mode) {
     this.viewMode = mode;
     this.itemsPerPage = mode === 'list' ? 4 : 10;
     this.totalPages = Math.ceil(
-      this.filteredEmployees.length / this.itemsPerPage
+      (this.employees?.length || 0) / this.itemsPerPage
     );
     this.currentPage = 1;
   }
@@ -179,9 +92,12 @@ export class EmployeeList extends ReduxMixin(LitElement) {
   }
 
   _getPaginatedEmployees() {
+    if (!this.employees || !Array.isArray(this.employees)) {
+      return [];
+    }
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-    return this.filteredEmployees.slice(start, end);
+    return this.employees.slice(start, end);
   }
 
   _handleEdit(employee) {
@@ -261,7 +177,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
       display: grid;
       grid-template-columns: auto auto;
       width: 85%;
-      gap: 6rem 2rem;
+      gap: 6rem 8rem;
       padding: 1rem;
       margin: 0 auto;
       border-radius: 4px;
@@ -747,7 +663,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
 
   render() {
     const paginatedEmployees = this._getPaginatedEmployees();
-    const totalItems = this.filteredEmployees.length;
+    const totalItems = this.employees ? this.employees.length : 0;
     return html`
       <div class="employee-list-container">
         <div class="employee-list-header">
@@ -841,8 +757,8 @@ export class EmployeeList extends ReduxMixin(LitElement) {
                   <td>${this._formatDate(emp.dateOfBirth)}</td>
                   <td>${emp.phone}</td>
                   <td>${emp.email}</td>
-                  <td>${emp.department}</td>
-                  <td>${emp.position}</td>
+                  <td>${getDepartmentName(emp.department)}</td>
+                  <td>${getPositionName(emp.position)}</td>
                   <td>
                     <div class="actions">
                       <div>
@@ -1029,11 +945,11 @@ export class EmployeeList extends ReduxMixin(LitElement) {
                 <div class="card-row">
                   <div class="field-group">
                     <label>${t('employeeList.department', 'Department')}</label>
-                    <span>${emp.department}</span>
+                    <span>${getDepartmentName(emp.department)}</span>
                   </div>
                   <div class="field-group">
                     <label>${t('employeeList.position', 'Position')}</label>
-                    <span>${emp.position}</span>
+                    <span>${getPositionName(emp.position)}</span>
                   </div>
                 </div>
 

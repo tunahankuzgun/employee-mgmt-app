@@ -7,6 +7,15 @@ export default {
     employees: 'Employees',
     addEmployee: 'Add Employee',
   },
+  departments: {
+    analytics: 'Analytics',
+    tech: 'Tech',
+  },
+  positions: {
+    junior: 'Junior',
+    medior: 'Medior',
+    senior: 'Senior',
+  },
   employeeList: {
     title: 'Employee List',
     addEmployee: 'Add Employee',

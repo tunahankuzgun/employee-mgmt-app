@@ -70,6 +70,9 @@ export class NavigationMenu extends ReduxMixin(LitElement) {
       .text {
         display: none;
       }
+      :host {
+        gap: 0;
+      }
     }
   `;
 
