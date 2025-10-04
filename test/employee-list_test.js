@@ -5,6 +5,9 @@ import {store} from '../src/store/index.js';
 import {selectEmployees} from '../src/store/slices/employeesSlice.js';
 import {DEPARTMENTS, POSITIONS} from '../src/store/slices/employeesSlice.js';
 import '../src/components/employee-list.js';
+import '../src/components/employee-table.js';
+import '../src/components/employee-card-list.js';
+import '../src/components/employee-pagination.js';
 
 suite('EmployeeList', () => {
   test('is defined', () => {
@@ -49,7 +52,7 @@ suite('EmployeeList', () => {
   test('renders table view by default', async () => {
     const element = await fixture(html`<employee-list></employee-list>`);
     await element.updateComplete;
-    const table = element.shadowRoot.querySelector('.employee-table');
+    const table = element.shadowRoot.querySelector('employee-table');
     assert.isNotNull(table);
   });
 
@@ -57,16 +60,17 @@ suite('EmployeeList', () => {
     const element = await fixture(html`<employee-list></employee-list>`);
     element.viewMode = 'list';
     await element.updateComplete;
-    const listContainer = element.shadowRoot.querySelector(
-      '.employee-list-container'
-    );
+    const listContainer =
+      element.shadowRoot.querySelector('employee-card-list');
     assert.isNotNull(listContainer);
   });
 
   test('renders checkbox inputs', async () => {
     const element = await fixture(html`<employee-list></employee-list>`);
     await element.updateComplete;
-    const checkboxes = element.shadowRoot.querySelectorAll(
+    const tableComponent = element.shadowRoot.querySelector('employee-table');
+    await tableComponent.updateComplete;
+    const checkboxes = tableComponent.shadowRoot.querySelectorAll(
       'input[type="checkbox"]'
     );
     assert.isTrue(checkboxes.length > 0);
@@ -93,7 +97,22 @@ suite('EmployeeList', () => {
   });
 
   test('formats dates correctly', async () => {
-    const element = await fixture(html`<employee-list></employee-list>`);
+    const element = await fixture(html`<employee-table></employee-table>`);
+    element.employees = [
+      {
+        id: 1,
+        firstName: 'Test',
+        lastName: 'User',
+        dateOfEmployment: '2023-01-15',
+        dateOfBirth: '1990-01-01',
+        email: 'test@test.com',
+        phone: '123-456-7890',
+        department: 'tech',
+        position: 'junior',
+        salary: 50000,
+      },
+    ];
+    await element.updateComplete;
     const testDate = '2023-01-15';
     const formattedDate = element._formatDate(testDate);
     assert.include(formattedDate, '2023');
@@ -160,14 +179,13 @@ suite('View Mode Functionality', () => {
 
     element.viewMode = 'table';
     await element.updateComplete;
-    const table = element.shadowRoot.querySelector('.employee-table');
+    const table = element.shadowRoot.querySelector('employee-table');
     assert.isNotNull(table);
 
     element.viewMode = 'list';
     await element.updateComplete;
-    const listContainer = element.shadowRoot.querySelector(
-      '.employee-list-container'
-    );
+    const listContainer =
+      element.shadowRoot.querySelector('employee-card-list');
     assert.isNotNull(listContainer);
   });
 });
@@ -202,7 +220,7 @@ suite('Pagination Functionality', () => {
     const element = await fixture(html`<employee-list></employee-list>`);
     await element.updateComplete;
 
-    const pagination = element.shadowRoot.querySelector('.pagination');
+    const pagination = element.shadowRoot.querySelector('employee-pagination');
     if (element.totalPages > 1) {
       assert.isNotNull(pagination);
     }
@@ -250,7 +268,9 @@ suite('Selection Functionality', () => {
     element.viewMode = 'table';
     await element.updateComplete;
 
-    const selectAllCheckbox = element.shadowRoot.querySelector(
+    const tableComponent = element.shadowRoot.querySelector('employee-table');
+    await tableComponent.updateComplete;
+    const selectAllCheckbox = tableComponent.shadowRoot.querySelector(
       'input[type="checkbox"]'
     );
     assert.isNotNull(selectAllCheckbox);
@@ -261,7 +281,9 @@ suite('Selection Functionality', () => {
     element.viewMode = 'table';
     await element.updateComplete;
 
-    const checkboxes = element.shadowRoot.querySelectorAll(
+    const tableComponent = element.shadowRoot.querySelector('employee-table');
+    await tableComponent.updateComplete;
+    const checkboxes = tableComponent.shadowRoot.querySelectorAll(
       'input[type="checkbox"]'
     );
     assert.isTrue(checkboxes.length > 1);
@@ -270,13 +292,12 @@ suite('Selection Functionality', () => {
 
 suite('Data Formatting', () => {
   test('_formatDate handles different date formats', async () => {
-    const element = await fixture(html`<employee-list></employee-list>`);
-
     const testDate1 = '2023-01-15';
     const testDate2 = '2023-12-31';
 
-    const formatted1 = element._formatDate(testDate1);
-    const formatted2 = element._formatDate(testDate2);
+    const tableElement = await fixture(html`<employee-table></employee-table>`);
+    const formatted1 = tableElement._formatDate(testDate1);
+    const formatted2 = tableElement._formatDate(testDate2);
 
     assert.isString(formatted1);
     assert.isString(formatted2);
