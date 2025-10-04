@@ -40,23 +40,32 @@ export class EmployeePagination extends LitElement {
     .pagination div.active {
       background-color: #ff6200;
       color: #fff;
-      border-radius: 100%;
     }
 
     .pagination-next,
     .pagination-prev {
-      height: 100%;
+      height: auto;
       background: none;
       border: none;
     }
 
     .pagination-item {
-      padding: 0.25rem 0.6rem;
+      min-width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      border-radius: 50%;
+      font-weight: 500;
     }
 
     .pagination-ellipsis {
-      padding: 0.25rem 0.6rem;
+      min-width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #666;
       cursor: default;
     }
@@ -75,11 +84,6 @@ export class EmployeePagination extends LitElement {
       .pagination-item {
         padding: 0.25rem 0.5rem;
         text-align: center;
-      }
-
-      .pagination svg {
-        width: 20px;
-        height: 20px;
       }
     }
 
@@ -155,28 +159,25 @@ export class EmployeePagination extends LitElement {
     return html`
       <div class="pagination-section">
         <div class="pagination">
-          <button
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            color="${this.currentPage === 1 ? 'gray' : '#ff6200'}"
             class="pagination-prev"
             @click="${() =>
               this.currentPage !== 1
                 ? this._handlePageChange(this.currentPage - 1)
                 : null}"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              color="${this.currentPage === 1 ? 'gray' : '#ff6200'}"
-            >
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
+            <path d="m15 18-6-6 6-6" />
+          </svg>
           ${pages.map((page) => {
             if (page === '...') {
               return html` <div class="pagination-ellipsis">...</div> `;
@@ -192,30 +193,25 @@ export class EmployeePagination extends LitElement {
               </div>
             `;
           })}
-          <button
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            color="${this.currentPage === this.totalPages ? 'gray' : '#ff6200'}"
             @click="${() =>
               this.currentPage !== this.totalPages
                 ? this._handlePageChange(this.currentPage + 1)
                 : null}"
             class="pagination-next"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              color="${this.currentPage === this.totalPages
-                ? 'gray'
-                : '#ff6200'}"
-            >
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
+            <path d="m9 18 6-6-6-6" />
+          </svg>
         </div>
       </div>
     `;
