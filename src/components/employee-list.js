@@ -2,6 +2,7 @@ import {t} from '../utils/i18n.js';
 import {LitElement, html, css} from 'lit';
 import {ReduxMixin} from '../mixins/ReduxMixin.js';
 import {selectEmployees} from '../store/slices/employeesSlice.js';
+import {Router} from '@vaadin/router';
 import './employee-table.js';
 import './employee-card-list.js';
 import './employee-pagination.js';
@@ -74,19 +75,17 @@ export class EmployeeList extends ReduxMixin(LitElement) {
 
   _handleEdit(event) {
     const employee = event.detail?.employee || event;
-    // TODO: Navigate to edit form
-    console.log('Edit employee:', employee);
+    if (employee && employee.id) {
+      Router.go(`/edit/${employee.id}`);
+    }
   }
 
-  _handleDelete(event) {
-    const employee = event.detail?.employee || event;
-    //TODO: Show confirmation and delete
-    console.log('Delete employee:', employee);
+  _handleDelete(/* event */) {
+    // TODO: Show confirmation and delete
   }
 
-  _handleSelectAll(event) {
-    const checked = event.detail?.checked || event.target?.checked;
-    console.log('Select all:', checked);
+  _handleSelectAll(/* event */) {
+    // TODO: Implement select all functionality
   }
 
   static styles = css`

@@ -38,6 +38,7 @@ export class AppShell extends ReduxMixin(LitElement) {
       console.error('Router outlet not found in shadow DOM');
     }
   }
+
   static styles = css`
     :host {
       display: block;

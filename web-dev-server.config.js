@@ -22,4 +22,18 @@ export default {
       },
     }),
   ],
+  // SPA fallback - redirect all routes to index.html
+  appIndex: 'index.html',
+  // Middleware to handle SPA routing
+  middleware: [
+    function rewriteIndex(context, next) {
+      if (
+        context.url.indexOf('.') === -1 &&
+        !context.url.startsWith('/node_modules')
+      ) {
+        context.url = '/index.html';
+      }
+      return next();
+    },
+  ],
 };
