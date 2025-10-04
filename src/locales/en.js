@@ -72,4 +72,12 @@ export default {
     confirm: 'Delete',
     cancel: 'Cancel',
   },
+  editDialog: {
+    title: 'Edit Employee?',
+    message: 'Do you want to edit this employee?',
+    messagePrefix: 'Do you want to edit employee record of',
+    messageSuffix: '?',
+    confirm: 'Edit',
+    cancel: 'Cancel',
+  },
 };

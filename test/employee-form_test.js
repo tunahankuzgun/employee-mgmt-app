@@ -393,4 +393,85 @@ suite('EmployeeForm', () => {
     const input = element.shadowRoot.querySelector('#firstName');
     assert.equal(input.value, 'Jane');
   });
+
+  test('shows edit confirmation dialog on submit in edit mode', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    element.isEditMode = true;
+    element.employeeId = '1';
+    element.formData = {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@test.com',
+      phone: '+90 (532) 123 45 67',
+      dateOfEmployment: '2023-01-01',
+      dateOfBirth: '1990-01-01',
+      department: DEPARTMENTS.TECH,
+      position: POSITIONS.SENIOR,
+    };
+
+    await element.updateComplete;
+
+    assert.isFalse(element.showEditDialog);
+
+    element._handleSubmit({preventDefault: () => {}});
+
+    await element.updateComplete;
+
+    assert.isTrue(element.showEditDialog);
+  });
+
+  test('does not show edit dialog in add mode', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    element.isEditMode = false;
+    element.formData = {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@test.com',
+      phone: '+90 (532) 123 45 67',
+      dateOfEmployment: '2023-01-01',
+      dateOfBirth: '1990-01-01',
+      department: DEPARTMENTS.TECH,
+      position: POSITIONS.SENIOR,
+    };
+
+    await element.updateComplete;
+
+    assert.isFalse(element.showEditDialog);
+
+    const initialCount = selectEmployees(store.getState()).length;
+    element.dispatch(addEmployee(element.formData));
+
+    await element.updateComplete;
+
+    assert.isFalse(element.showEditDialog);
+    const newCount = selectEmployees(store.getState()).length;
+    assert.equal(newCount, initialCount + 1);
+  });
+
+  test('edit confirmation dialog is rendered', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    const dialog = element.shadowRoot.querySelector('confirmation-dialog');
+    assert.isNotNull(dialog);
+  });
+
+  test('cancel edit dialog closes it', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    element.showEditDialog = true;
+    await element.updateComplete;
+
+    assert.isTrue(element.showEditDialog);
+
+    element._handleCancelEdit();
+    await element.updateComplete;
+
+    assert.isFalse(element.showEditDialog);
+  });
 });

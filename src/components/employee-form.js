@@ -8,6 +8,7 @@ import {
   POSITIONS,
 } from '../store/slices/employeesSlice.js';
 import {t} from '../utils/i18n.js';
+import './confirmation-dialog.js';
 
 /**
  * Employee Form Component
@@ -21,6 +22,7 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
     formData: {type: Object, attribute: false},
     errors: {type: Object, attribute: false},
     language: {type: String, attribute: false},
+    showEditDialog: {type: Boolean, attribute: false},
   };
 
   static styles = css`
@@ -132,6 +134,7 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
     this.formData = this._getEmptyFormData();
     this.errors = {};
     this.language = null;
+    this.showEditDialog = false;
   }
 
   /**
@@ -395,17 +398,26 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
     }
 
     if (this.isEditMode) {
-      this.dispatch(
-        updateEmployee({
-          ...this.formData,
-          id: parseInt(this.employeeId),
-        })
-      );
+      this.showEditDialog = true;
     } else {
       this.dispatch(addEmployee(this.formData));
+      Router.go('/');
     }
+  }
 
+  _handleConfirmEdit() {
+    this.dispatch(
+      updateEmployee({
+        ...this.formData,
+        id: parseInt(this.employeeId),
+      })
+    );
+    this.showEditDialog = false;
     Router.go('/');
+  }
+
+  _handleCancelEdit() {
+    this.showEditDialog = false;
   }
 
   _handleCancel() {
@@ -595,6 +607,25 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
             </button>
           </div>
         </form>
+
+        <confirmation-dialog
+          ?open="${this.showEditDialog}"
+          .title="${t('editDialog.title', 'Edit Employee?')}"
+          .message="${this.formData.firstName && this.formData.lastName
+            ? `${t(
+                'editDialog.messagePrefix',
+                'Do you want to edit Employee record of'
+              )} ${this.formData.firstName} ${this.formData.lastName}${t(
+                'editDialog.messageSuffix',
+                '?'
+              )}`
+            : t('editDialog.message', 'Do you want to edit this employee?')}"
+          .confirmText="${t('editDialog.confirm', 'Edit')}"
+          .cancelText="${t('editDialog.cancel', 'Cancel')}"
+          confirmType="primary"
+          @confirm="${this._handleConfirmEdit}"
+          @cancel="${this._handleCancelEdit}"
+        ></confirmation-dialog>
       </div>
     `;
   }

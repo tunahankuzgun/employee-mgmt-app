@@ -72,4 +72,12 @@ export default {
     confirm: 'Sil',
     cancel: 'İptal',
   },
+  editDialog: {
+    title: 'Çalışanı Düzenle?',
+    message: 'Bu çalışanı düzenlemek istiyor musunuz?',
+    messagePrefix: '',
+    messageSuffix: 'adlı çalışan kaydını düzenlemek istiyor musunuz?',
+    confirm: 'Düzenle',
+    cancel: 'İptal',
+  },
 };

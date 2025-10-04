@@ -303,8 +303,8 @@ suite('CRUD Functionality', () => {
     const element = await fixture(html`<employee-list></employee-list>`);
     await element.updateComplete;
 
-    const dialog = element.shadowRoot.querySelector('confirmation-dialog');
-    assert.isNotNull(dialog);
+    const dialogs = element.shadowRoot.querySelectorAll('confirmation-dialog');
+    assert.equal(dialogs.length, 1);
   });
 
   test('edit and delete buttons are rendered in table view', async () => {
