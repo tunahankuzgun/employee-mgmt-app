@@ -1,11 +1,15 @@
 import {t} from '../utils/i18n.js';
 import {LitElement, html, css} from 'lit';
 import {ReduxMixin} from '../mixins/ReduxMixin.js';
-import {selectEmployees} from '../store/slices/employeesSlice.js';
+import {
+  selectEmployees,
+  deleteEmployee,
+} from '../store/slices/employeesSlice.js';
 import {Router} from '@vaadin/router';
 import './employee-table.js';
 import './employee-card-list.js';
 import './employee-pagination.js';
+import './confirmation-dialog.js';
 
 /**
  * Employee List Component - Main container for employee display
@@ -18,6 +22,8 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     currentPage: {type: Number},
     itemsPerPage: {type: Number},
     totalPages: {type: Number},
+    showDeleteDialog: {type: Boolean},
+    employeeToDelete: {type: Object},
   };
 
   constructor() {
@@ -28,6 +34,8 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     this.currentPage = 1;
     this.itemsPerPage = 10;
     this.totalPages = 0;
+    this.showDeleteDialog = false;
+    this.employeeToDelete = null;
   }
 
   /**
@@ -80,8 +88,24 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     }
   }
 
-  _handleDelete(/* event */) {
-    // TODO: Show confirmation and delete
+  _handleDelete(event) {
+    const employee = event.detail?.employee || event;
+    if (employee && employee.id) {
+      this.employeeToDelete = employee;
+      this.showDeleteDialog = true;
+    }
+  }
+
+  _handleConfirmDelete() {
+    if (this.employeeToDelete && this.employeeToDelete.id) {
+      this.dispatch(deleteEmployee(this.employeeToDelete.id));
+      this._handleCancelDelete();
+    }
+  }
+
+  _handleCancelDelete() {
+    this.showDeleteDialog = false;
+    this.employeeToDelete = null;
   }
 
   _handleSelectAll(/* event */) {
@@ -251,6 +275,27 @@ export class EmployeeList extends ReduxMixin(LitElement) {
           .itemsPerPage="${this.itemsPerPage}"
           @page-changed="${this._handlePageChange}"
         ></employee-pagination>
+
+        <confirmation-dialog
+          ?open="${this.showDeleteDialog}"
+          .title="${t('deleteDialog.title', 'Are you sure?')}"
+          .message="${this.employeeToDelete
+            ? `${t(
+                'deleteDialog.messagePrefix',
+                'Selected Employee record of'
+              )} ${this.employeeToDelete.firstName} ${
+                this.employeeToDelete.lastName
+              } ${t('deleteDialog.messageSuffix', 'will be deleted.')}`
+            : t(
+                'deleteDialog.message',
+                'Selected Employee record will be deleted.'
+              )}"
+          .confirmText="${t('deleteDialog.confirm', 'Delete')}"
+          .cancelText="${t('deleteDialog.cancel', 'Cancel')}"
+          confirmType="danger"
+          @confirm="${this._handleConfirmDelete}"
+          @cancel="${this._handleCancelDelete}"
+        ></confirmation-dialog>
       </div>
     `;
   }

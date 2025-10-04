@@ -64,4 +64,12 @@ export default {
     ageRange: 'Age must be between 18 and 100',
     futureDate: 'Date cannot be in the future',
   },
+  deleteDialog: {
+    title: 'Are you sure?',
+    message: 'Selected Employee record will be deleted.',
+    messagePrefix: 'Selected Employee record of',
+    messageSuffix: 'will be deleted.',
+    confirm: 'Delete',
+    cancel: 'Cancel',
+  },
 };

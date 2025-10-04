@@ -244,6 +244,69 @@ suite('CRUD Functionality', () => {
     element._handleDelete(testEmployee);
   });
 
+  test('_handleDelete shows confirmation dialog', async () => {
+    const element = await fixture(html`<employee-list></employee-list>`);
+    await element.updateComplete;
+
+    const testEmployee = element.employees[0];
+    assert.isFalse(element.showDeleteDialog);
+    assert.isNull(element.employeeToDelete);
+
+    element._handleDelete({detail: {employee: testEmployee}});
+    await element.updateComplete;
+
+    assert.isTrue(element.showDeleteDialog);
+    assert.equal(element.employeeToDelete, testEmployee);
+  });
+
+  test('_handleCancelDelete closes dialog and clears employee', async () => {
+    const element = await fixture(html`<employee-list></employee-list>`);
+    await element.updateComplete;
+
+    const testEmployee = element.employees[0];
+    element.employeeToDelete = testEmployee;
+    element.showDeleteDialog = true;
+    await element.updateComplete;
+
+    element._handleCancelDelete();
+    await element.updateComplete;
+
+    assert.isFalse(element.showDeleteDialog);
+    assert.isNull(element.employeeToDelete);
+  });
+
+  test('_handleConfirmDelete dispatches delete action and closes dialog', async () => {
+    const element = await fixture(html`<employee-list></employee-list>`);
+    await element.updateComplete;
+
+    const testEmployee = element.employees[0];
+    const employeeCount = element.employees.length;
+
+    element.employeeToDelete = testEmployee;
+    element.showDeleteDialog = true;
+    await element.updateComplete;
+
+    element._handleConfirmDelete();
+    await element.updateComplete;
+
+    assert.isFalse(element.showDeleteDialog);
+    assert.isNull(element.employeeToDelete);
+
+    const storeEmployees = selectEmployees(store.getState());
+    assert.equal(storeEmployees.length, employeeCount - 1);
+    assert.isUndefined(
+      storeEmployees.find((emp) => emp.id === testEmployee.id)
+    );
+  });
+
+  test('confirmation dialog is rendered', async () => {
+    const element = await fixture(html`<employee-list></employee-list>`);
+    await element.updateComplete;
+
+    const dialog = element.shadowRoot.querySelector('confirmation-dialog');
+    assert.isNotNull(dialog);
+  });
+
   test('edit and delete buttons are rendered in table view', async () => {
     const element = await fixture(html`<employee-list></employee-list>`);
     element.viewMode = 'table';

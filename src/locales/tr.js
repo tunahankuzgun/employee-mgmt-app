@@ -64,4 +64,12 @@ export default {
     ageRange: 'Yaş 18 ile 100 arasında olmalıdır',
     futureDate: 'Tarih gelecekte olamaz',
   },
+  deleteDialog: {
+    title: 'Emin misiniz?',
+    message: 'Seçili Çalışan kaydı silinecektir.',
+    messagePrefix: '',
+    messageSuffix: 'adlı çalışan kaydı silinecektir.',
+    confirm: 'Sil',
+    cancel: 'İptal',
+  },
 };
