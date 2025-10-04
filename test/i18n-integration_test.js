@@ -9,6 +9,8 @@ import {initI18n} from '../src/utils/i18n.js';
 import '../src/components/navigation-menu.js';
 import '../src/components/language-selector.js';
 
+/* global Promise */
+
 suite('I18n Integration', () => {
   suiteSetup(async () => {
     await initI18n();
@@ -64,5 +66,40 @@ suite('I18n Integration', () => {
     assert.notEqual(initialLang, newLang, 'Language should change');
     console.log('Initial language:', initialLang, 'Text:', initialText);
     console.log('New language:', newLang, 'Text:', newText);
+  });
+
+  test('HTML lang attribute updates when language changes', async () => {
+    store.dispatch(setLanguage('en'));
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.equal(
+      document.documentElement.lang,
+      'en',
+      'HTML lang should be "en"'
+    );
+
+    store.dispatch(setLanguage('tr'));
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.equal(
+      document.documentElement.lang,
+      'tr',
+      'HTML lang should be "tr"'
+    );
+
+    store.dispatch(setLanguage('en'));
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.equal(
+      document.documentElement.lang,
+      'en',
+      'HTML lang should be "en" again'
+    );
+  });
+
+  test('HTML lang attribute is set on i18n initialization', async () => {
+    const currentLang = selectCurrentLanguage(store.getState());
+    assert.equal(
+      document.documentElement.lang,
+      currentLang,
+      'HTML lang should match current language after initialization'
+    );
   });
 });

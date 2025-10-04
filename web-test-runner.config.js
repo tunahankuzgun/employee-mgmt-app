@@ -98,8 +98,22 @@ export default {
       timeout: '60000',
     },
   },
+  // Coverage configuration
+  coverage: true,
+  coverageConfig: {
+    include: ['src/**/*.js'],
+    exclude: ['test/**/*.js', '**/node_modules/**'],
+    threshold: {
+      statements: 85,
+      branches: 80,
+      functions: 85,
+      lines: 85,
+    },
+    reportDir: './coverage',
+    reporters: ['html', 'lcovonly', 'text-summary'],
+  },
   // Custom HTML template to inject global variables
-  testRunnerHtml: testFramework => `
+  testRunnerHtml: (testFramework) => `
     <html>
       <head>
         <script>

@@ -12,6 +12,8 @@ import {
 export async function initI18n() {
   const currentLanguage = selectCurrentLanguage(store.getState());
 
+  document.documentElement.lang = currentLanguage;
+
   const en = await import('../locales/en.js');
   const tr = await import('../locales/tr.js');
 
