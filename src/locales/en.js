@@ -51,6 +51,7 @@ export default {
     department: 'Department',
     position: 'Position',
     add: 'Add',
+    save: 'Save',
     update: 'Update',
     cancel: 'Cancel',
   },

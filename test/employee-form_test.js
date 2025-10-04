@@ -45,8 +45,8 @@ suite('EmployeeForm', () => {
     assert.equal(element.formData.phone, '');
     assert.equal(element.formData.dateOfEmployment, '');
     assert.equal(element.formData.dateOfBirth, '');
-    assert.equal(element.formData.department, DEPARTMENTS.ANALYTICS);
-    assert.equal(element.formData.position, POSITIONS.JUNIOR);
+    assert.equal(element.formData.department, '');
+    assert.equal(element.formData.position, '');
   });
 
   test('renders all form fields', async () => {
@@ -225,9 +225,10 @@ suite('EmployeeForm', () => {
     const departmentSelect = element.shadowRoot.querySelector('#department');
     const options = departmentSelect.querySelectorAll('option');
 
-    assert.equal(options.length, 2);
-    assert.equal(options[0].value, DEPARTMENTS.ANALYTICS);
-    assert.equal(options[1].value, DEPARTMENTS.TECH);
+    assert.equal(options.length, 3);
+    assert.equal(options[0].value, '');
+    assert.equal(options[1].value, DEPARTMENTS.ANALYTICS);
+    assert.equal(options[2].value, DEPARTMENTS.TECH);
   });
 
   test('position select has correct options', async () => {
@@ -237,10 +238,11 @@ suite('EmployeeForm', () => {
     const positionSelect = element.shadowRoot.querySelector('#position');
     const options = positionSelect.querySelectorAll('option');
 
-    assert.equal(options.length, 3);
-    assert.equal(options[0].value, POSITIONS.JUNIOR);
-    assert.equal(options[1].value, POSITIONS.MEDIOR);
-    assert.equal(options[2].value, POSITIONS.SENIOR);
+    assert.equal(options.length, 4);
+    assert.equal(options[0].value, '');
+    assert.equal(options[1].value, POSITIONS.JUNIOR);
+    assert.equal(options[2].value, POSITIONS.MEDIOR);
+    assert.equal(options[3].value, POSITIONS.SENIOR);
   });
 
   test('submits valid form and adds employee to store', async () => {

@@ -16,7 +16,6 @@ suite('ConfirmationDialog', () => {
     expect(el.message).to.equal('');
     expect(el.confirmText).to.equal('Confirm');
     expect(el.cancelText).to.equal('Cancel');
-    expect(el.confirmType).to.equal('primary');
   });
 
   test('renders when open', async () => {
@@ -53,23 +52,20 @@ suite('ConfirmationDialog', () => {
     );
 
     const buttons = el.shadowRoot.querySelectorAll('button');
-    const cancelButton = buttons[0];
-    const confirmButton = buttons[1];
+    const confirmButton = buttons[0];
+    const cancelButton = buttons[1];
 
-    expect(cancelButton.textContent.trim()).to.equal('İptal');
     expect(confirmButton.textContent.trim()).to.equal('Sil');
+    expect(cancelButton.textContent.trim()).to.equal('İptal');
   });
 
   test('applies correct confirm button type', async () => {
     const el = await fixture(
-      html`<confirmation-dialog
-        open
-        confirmType="danger"
-      ></confirmation-dialog>`
+      html`<confirmation-dialog open></confirmation-dialog>`
     );
 
     const confirmButton = el.shadowRoot.querySelector('.btn-confirm');
-    expect(confirmButton.classList.contains('danger')).to.be.true;
+    expect(confirmButton.classList.contains('primary')).to.be.true;
   });
 
   test('emits cancel event when cancel button is clicked', async () => {

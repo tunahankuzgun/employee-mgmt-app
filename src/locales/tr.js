@@ -51,6 +51,7 @@ export default {
     department: 'Departman',
     position: 'Pozisyon',
     add: 'Ekle',
+    save: 'Kaydet',
     update: 'Güncelle',
     cancel: 'İptal',
   },

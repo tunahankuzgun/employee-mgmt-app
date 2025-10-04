@@ -10,7 +10,6 @@ export class ConfirmationDialog extends LitElement {
     message: {type: String},
     confirmText: {type: String},
     cancelText: {type: String},
-    confirmType: {type: String},
   };
 
   static styles = css`
@@ -47,7 +46,7 @@ export class ConfirmationDialog extends LitElement {
       position: relative;
       background: white;
       border-radius: 8px;
-      padding: 2rem;
+      padding: 1rem;
       max-width: 500px;
       width: 90%;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -57,13 +56,31 @@ export class ConfirmationDialog extends LitElement {
 
     .dialog-header {
       margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     h2 {
       margin: 0;
       font-size: 1.25rem;
-      color: #333;
+      color: #ff6200;
       font-weight: 600;
+    }
+
+    .close-button {
+      color: #ff6200;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-button:hover {
+      color: #e55800;
+    }
+
+    .close-button svg {
+      width: 20px;
+      height: 20px;
     }
 
     .dialog-body {
@@ -75,6 +92,7 @@ export class ConfirmationDialog extends LitElement {
 
     .dialog-footer {
       display: flex;
+      flex-direction: column;
       gap: 0.75rem;
       justify-content: flex-end;
     }
@@ -82,7 +100,7 @@ export class ConfirmationDialog extends LitElement {
     button {
       padding: 0.625rem 1.25rem;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       font-size: 0.875rem;
       font-weight: 500;
       cursor: pointer;
@@ -91,9 +109,9 @@ export class ConfirmationDialog extends LitElement {
     }
 
     .btn-cancel {
-      background: #f8f9fa;
-      color: #333;
-      border: 1px solid #dee2e6;
+      background-color: white;
+      color: #4f46e5;
+      border: 1px solid #4f46e5;
     }
 
     .btn-cancel:hover {
@@ -102,23 +120,6 @@ export class ConfirmationDialog extends LitElement {
 
     .btn-confirm {
       color: white;
-    }
-
-    .btn-confirm.danger {
-      background: #dc3545;
-    }
-
-    .btn-confirm.danger:hover {
-      background: #c82333;
-    }
-
-    .btn-confirm.warning {
-      background: #ffc107;
-      color: #333;
-    }
-
-    .btn-confirm.warning:hover {
-      background: #e0a800;
     }
 
     .btn-confirm.primary {
@@ -157,7 +158,6 @@ export class ConfirmationDialog extends LitElement {
     this.message = '';
     this.confirmText = 'Confirm';
     this.cancelText = 'Cancel';
-    this.confirmType = 'primary';
   }
 
   _handleBackdropClick(e) {
@@ -190,17 +190,30 @@ export class ConfirmationDialog extends LitElement {
         <div class="dialog" @click=${(e) => e.stopPropagation()}>
           <div class="dialog-header">
             <h2>${this.title}</h2>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="close-button"
+              @click=${this._handleCancel}
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
           </div>
           <div class="dialog-body">${this.message}</div>
           <div class="dialog-footer">
+            <button class="btn-confirm primary" @click=${this._handleConfirm}>
+              ${this.confirmText}
+            </button>
             <button class="btn-cancel" @click=${this._handleCancel}>
               ${this.cancelText}
-            </button>
-            <button
-              class="btn-confirm ${this.confirmType}"
-              @click=${this._handleConfirm}
-            >
-              ${this.confirmText}
             </button>
           </div>
         </div>
