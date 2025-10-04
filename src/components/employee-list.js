@@ -5,6 +5,13 @@ import {
   selectEmployees,
   deleteEmployee,
 } from '../store/slices/employeesSlice.js';
+import {
+  selectViewMode,
+  selectCurrentPage,
+  selectItemsPerPage,
+  setViewMode,
+  setCurrentPage,
+} from '../store/slices/uiSlice.js';
 import {Router} from '@vaadin/router';
 import './employee-table.js';
 import './employee-card-list.js';
@@ -38,33 +45,58 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     this.employeeToDelete = null;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.getState) {
+      const state = this.getState();
+      this.viewMode = selectViewMode(state);
+      this.currentPage = selectCurrentPage(state);
+      this.itemsPerPage = selectItemsPerPage(state);
+    }
+  }
+
   /**
    * Handle Redux state changes
    * @param {Object} state - Current Redux state
    */
   stateChanged(state) {
     const employees = selectEmployees(state);
+    const viewMode = selectViewMode(state);
+    const currentPage = selectCurrentPage(state);
+    const itemsPerPage = selectItemsPerPage(state);
 
     if (employees && employees !== this.employees) {
       this.employees = employees;
       this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
       if (this.currentPage > this.totalPages && this.totalPages > 0) {
         this.currentPage = 1;
+        this.dispatch(setCurrentPage(1));
       }
+    }
+
+    if (viewMode !== this.viewMode) {
+      this.viewMode = viewMode;
+    }
+
+    if (currentPage !== this.currentPage) {
+      this.currentPage = currentPage;
+    }
+
+    if (itemsPerPage !== this.itemsPerPage) {
+      this.itemsPerPage = itemsPerPage;
+      this.totalPages = Math.ceil(
+        (this.employees?.length || 0) / this.itemsPerPage
+      );
     }
   }
 
   _handleViewModeChange(mode) {
-    this.viewMode = mode;
-    this.itemsPerPage = mode === 'list' ? 4 : 10;
-    this.totalPages = Math.ceil(
-      (this.employees?.length || 0) / this.itemsPerPage
-    );
-    this.currentPage = 1;
+    this.dispatch(setViewMode(mode));
   }
 
   _handlePageChange(event) {
-    this.currentPage = event.detail?.page || event;
+    const page = event.detail?.page || event;
+    this.dispatch(setCurrentPage(page));
   }
 
   /**

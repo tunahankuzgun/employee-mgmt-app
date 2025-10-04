@@ -47,6 +47,7 @@ export const localStorageMiddleware = (store) => (next) => (action) => {
   const stateToSave = {
     employees: state.employees,
     language: state.language,
+    ui: state.ui,
   };
 
   saveToLocalStorage(stateToSave);

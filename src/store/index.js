@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 import languageReducer from './slices/languageSlice.js';
 import employeesReducer from './slices/employeesSlice.js';
+import uiReducer from './slices/uiSlice.js';
 import {
   localStorageMiddleware,
   loadFromLocalStorage,
@@ -12,6 +13,7 @@ export const store = configureStore({
   reducer: {
     language: languageReducer,
     employees: employeesReducer,
+    ui: uiReducer,
   },
   preloadedState: persistedState || undefined,
   middleware: (getDefaultMiddleware) =>
