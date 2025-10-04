@@ -228,6 +228,10 @@ export class EmployeeCardList extends LitElement {
   }
 
   render() {
+    if (!this.employees || this.employees.length === 0) {
+      return html``;
+    }
+
     return html`
       ${this.employees.map(
         (emp) => html`

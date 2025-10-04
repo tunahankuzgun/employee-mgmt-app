@@ -303,6 +303,17 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
           error = t('validationErrors.required');
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           error = t('validationErrors.invalidEmail');
+        } else {
+          const state = this.getState();
+          const employees = state?.employees?.employees || [];
+          const emailExists = employees.some(
+            (emp) =>
+              emp.email.toLowerCase() === value.toLowerCase() &&
+              (!this.isEditMode || emp.id !== parseInt(this.employeeId))
+          );
+          if (emailExists) {
+            error = t('validationErrors.emailExists');
+          }
         }
         break;
 

@@ -5,9 +5,11 @@ import {
   setCurrentPage,
   setItemsPerPage,
   resetPagination,
+  setSearchQuery,
   selectViewMode,
   selectCurrentPage,
   selectItemsPerPage,
+  selectSearchQuery,
 } from '../src/store/slices/uiSlice.js';
 
 suite('UI Slice', () => {
@@ -18,6 +20,7 @@ suite('UI Slice', () => {
         viewMode: 'table',
         currentPage: 1,
         itemsPerPage: 10,
+        searchQuery: '',
       });
     });
 
@@ -76,6 +79,29 @@ suite('UI Slice', () => {
       assert.equal(state.viewMode, 'table');
       assert.equal(state.itemsPerPage, 10);
     });
+
+    test('should handle setSearchQuery', () => {
+      const initialState = {
+        viewMode: 'table',
+        currentPage: 5,
+        itemsPerPage: 10,
+        searchQuery: '',
+      };
+      const state = uiReducer(initialState, setSearchQuery('test search'));
+      assert.equal(state.searchQuery, 'test search');
+      assert.equal(state.currentPage, 1);
+    });
+
+    test('should reset to page 1 when search query changes', () => {
+      const initialState = {
+        viewMode: 'table',
+        currentPage: 3,
+        itemsPerPage: 10,
+        searchQuery: '',
+      };
+      const state = uiReducer(initialState, setSearchQuery('new search'));
+      assert.equal(state.currentPage, 1);
+    });
   });
 
   suite('Selectors', () => {
@@ -117,6 +143,19 @@ suite('UI Slice', () => {
       assert.equal(selectViewMode(state), 'table');
       assert.equal(selectCurrentPage(state), 1);
       assert.equal(selectItemsPerPage(state), 10);
+      assert.equal(selectSearchQuery(state), '');
+    });
+
+    test('should select searchQuery', () => {
+      const state = {
+        ui: {
+          viewMode: 'table',
+          currentPage: 1,
+          itemsPerPage: 10,
+          searchQuery: 'test query',
+        },
+      };
+      assert.equal(selectSearchQuery(state), 'test query');
     });
   });
 });

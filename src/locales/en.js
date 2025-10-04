@@ -38,6 +38,9 @@ export default {
     showing: 'Showing',
     of: 'of',
     employees: 'employees',
+    search_placeholder: 'Search...',
+    search_label: 'Search employees',
+    clear_search: 'Clear search',
   },
   employeeForm: {
     addEmployee: 'Add Employee',
@@ -60,6 +63,7 @@ export default {
     minLength: 'Must be at least {min} characters',
     lettersOnly: 'Only letters are allowed',
     invalidEmail: 'Please enter a valid email address',
+    emailExists: 'This email address is already registered',
     phoneLength: 'Phone number must be 12 digits (90XXXXXXXXXX)',
     phoneCountryCode: 'Phone number must start with 90',
     ageRange: 'Age must be between 18 and 100',

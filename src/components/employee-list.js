@@ -9,6 +9,7 @@ import {
   selectViewMode,
   selectCurrentPage,
   selectItemsPerPage,
+  selectSearchQuery,
   setViewMode,
   setCurrentPage,
 } from '../store/slices/uiSlice.js';
@@ -17,6 +18,7 @@ import './employee-table.js';
 import './employee-card-list.js';
 import './employee-pagination.js';
 import './confirmation-dialog.js';
+import './search-bar.js';
 
 /**
  * Employee List Component - Main container for employee display
@@ -31,6 +33,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     totalPages: {type: Number},
     showDeleteDialog: {type: Boolean},
     employeeToDelete: {type: Object},
+    searchQuery: {type: String},
   };
 
   constructor() {
@@ -43,6 +46,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     this.totalPages = 0;
     this.showDeleteDialog = false;
     this.employeeToDelete = null;
+    this.searchQuery = '';
   }
 
   connectedCallback() {
@@ -64,10 +68,20 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     const viewMode = selectViewMode(state);
     const currentPage = selectCurrentPage(state);
     const itemsPerPage = selectItemsPerPage(state);
+    const searchQuery = selectSearchQuery(state);
+
+    if (searchQuery !== this.searchQuery) {
+      this.searchQuery = searchQuery;
+    }
+
+    const filteredEmployees = this._getFilteredEmployees(
+      employees,
+      searchQuery
+    );
 
     if (employees && employees !== this.employees) {
       this.employees = employees;
-      this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
+      this.totalPages = Math.ceil(filteredEmployees.length / this.itemsPerPage);
       if (this.currentPage > this.totalPages && this.totalPages > 0) {
         this.currentPage = 1;
         this.dispatch(setCurrentPage(1));
@@ -83,7 +97,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
       if (itemsPerPageChanged) {
         this.itemsPerPage = itemsPerPage;
         this.totalPages = Math.ceil(
-          (this.employees?.length || 0) / this.itemsPerPage
+          filteredEmployees.length / this.itemsPerPage
         );
       }
 
@@ -91,7 +105,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
         this.viewMode = viewMode;
       }
 
-      if (this.employees && this.employees.length > 0) {
+      if (filteredEmployees.length > 0) {
         const newPage = Math.floor(currentOffset / this.itemsPerPage) + 1;
         const validPage = Math.max(1, Math.min(newPage, this.totalPages));
 
@@ -117,17 +131,61 @@ export class EmployeeList extends ReduxMixin(LitElement) {
   }
 
   /**
+   * Filter employees based on search query
+   * @param {Array<Object>} employees - All employees
+   * @param {string} query - Search query
+   * @returns {Array<Object>} Filtered employee array
+   */
+  _getFilteredEmployees(employees, query) {
+    if (!employees || !Array.isArray(employees)) {
+      return [];
+    }
+
+    if (!query || query.trim() === '') {
+      return employees;
+    }
+
+    const searchLower = query.toLowerCase().trim();
+
+    return employees.filter((employee) => {
+      const firstName = (employee.firstName || '').toLowerCase();
+      const lastName = (employee.lastName || '').toLowerCase();
+      const email = (employee.email || '').toLowerCase();
+      const department = (employee.department || '').toLowerCase();
+      const position = (employee.position || '').toLowerCase();
+      const phone = (employee.phone || '').toLowerCase();
+
+      return (
+        firstName.includes(searchLower) ||
+        lastName.includes(searchLower) ||
+        email.includes(searchLower) ||
+        department.includes(searchLower) ||
+        position.includes(searchLower) ||
+        phone.includes(searchLower)
+      );
+    });
+  }
+
+  /**
    * Get paginated employees for current page
    * @returns {Array<Object>} Paginated employee array
    */
   _getPaginatedEmployees() {
-    if (!this.employees || !Array.isArray(this.employees)) {
+    const filteredEmployees = this._getFilteredEmployees(
+      this.employees,
+      this.searchQuery
+    );
+
+    if (!filteredEmployees || !Array.isArray(filteredEmployees)) {
       /** @type {Array<Object>} */
       return [];
     }
+
+    this.totalPages = Math.ceil(filteredEmployees.length / this.itemsPerPage);
+
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-    return this.employees.slice(start, end);
+    return filteredEmployees.slice(start, end);
   }
 
   _handleEdit(event) {
@@ -180,12 +238,18 @@ export class EmployeeList extends ReduxMixin(LitElement) {
       gap: 0.5rem;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
     .employee-list-actions {
       display: flex;
       cursor: pointer;
       gap: 1rem;
       align-items: center;
-      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .employee-list-actions button {
@@ -247,56 +311,63 @@ export class EmployeeList extends ReduxMixin(LitElement) {
   render() {
     /** @type {Array<Object>} */
     const paginatedEmployees = this._getPaginatedEmployees();
-    const totalItems = this.employees ? this.employees.length : 0;
+    const filteredEmployees = this._getFilteredEmployees(
+      this.employees,
+      this.searchQuery
+    );
+    const totalItems = filteredEmployees ? filteredEmployees.length : 0;
 
     return html`
       <div class="employee-list-container">
         <div class="employee-list-header">
           <h2>${t('employeeList.title', 'Employee List')}</h2>
-          <div class="employee-list-actions">
-            <button
-              @click="${() => this._handleViewModeChange('table')}"
-              class="${this.viewMode === 'table' ? 'active' : ''}"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="36"
-                height="36"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.25"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+          <div class="header-right">
+            <search-bar></search-bar>
+            <div class="employee-list-actions">
+              <button
+                @click="${() => this._handleViewModeChange('table')}"
+                class="${this.viewMode === 'table' ? 'active' : ''}"
               >
-                <path d="M3 5h18" />
-                <path d="M3 12h18" />
-                <path d="M3 19h18" />
-              </svg>
-            </button>
-            <button
-              @click="${() => this._handleViewModeChange('list')}"
-              class="${this.viewMode === 'list' ? 'active' : ''}"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="36"
-                height="36"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.25"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-grid3x3-icon lucide-grid-3x3"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="36"
+                  height="36"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 5h18" />
+                  <path d="M3 12h18" />
+                  <path d="M3 19h18" />
+                </svg>
+              </button>
+              <button
+                @click="${() => this._handleViewModeChange('list')}"
+                class="${this.viewMode === 'list' ? 'active' : ''}"
               >
-                <rect width="18" height="18" x="3" y="3" rx="2" />
-                <path d="M3 9h18" />
-                <path d="M3 15h18" />
-                <path d="M9 3v18" />
-                <path d="M15 3v18" />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="36"
+                  height="36"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-grid3x3-icon lucide-grid-3x3"
+                >
+                  <rect width="18" height="18" x="3" y="3" rx="2" />
+                  <path d="M3 9h18" />
+                  <path d="M3 15h18" />
+                  <path d="M9 3v18" />
+                  <path d="M15 3v18" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 

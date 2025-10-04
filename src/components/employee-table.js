@@ -270,6 +270,10 @@ export class EmployeeTable extends LitElement {
   }
 
   render() {
+    if (!this.employees || this.employees.length === 0) {
+      return html``;
+    }
+
     return html`
       <table class="employee-table">
         <thead class="table-header">

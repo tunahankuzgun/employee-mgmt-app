@@ -38,6 +38,9 @@ export default {
     showing: 'Gösterilen',
     of: 'toplam',
     employees: 'çalışan',
+    search_placeholder: 'Arama...',
+    search_label: 'Çalışan ara',
+    clear_search: 'Aramayı temizle',
   },
   employeeForm: {
     addEmployee: 'Çalışan Ekle',
@@ -60,6 +63,7 @@ export default {
     minLength: 'En az {min} karakter olmalıdır',
     lettersOnly: 'Sadece harf girebilirsiniz',
     invalidEmail: 'Geçerli bir e-posta adresi giriniz',
+    emailExists: 'Bu e-posta adresi zaten kayıtlı',
     phoneLength: 'Telefon numarası 12 haneli olmalıdır (90XXXXXXXXXX)',
     phoneCountryCode: 'Telefon numarası 90 ile başlamalıdır',
     ageRange: 'Yaş 18 ile 100 arasında olmalıdır',

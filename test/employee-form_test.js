@@ -218,6 +218,95 @@ suite('EmployeeForm', () => {
     assert.isUndefined(element.errors.email);
   });
 
+  test('validates email uniqueness - rejects duplicate email', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    const employees = selectEmployees(store.getState());
+    const existingEmail = employees[0].email;
+
+    element.isEditMode = false;
+    element.formData = {...element.formData, email: existingEmail};
+
+    await element.updateComplete;
+
+    const error = element._validateField('email', existingEmail);
+    assert.ok(error, 'Should have error for duplicate email');
+    assert.include(
+      error.toLowerCase(),
+      'already',
+      'Error message should mention email already exists'
+    );
+  });
+
+  test('validates email uniqueness - allows same email in edit mode', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    const employees = selectEmployees(store.getState());
+    const existingEmployee = employees[0];
+
+    element.isEditMode = true;
+    element.employeeId = existingEmployee.id.toString();
+    element.formData = {...existingEmployee};
+
+    await element.updateComplete;
+
+    const error = element._validateField('email', existingEmployee.email);
+    assert.equal(
+      error,
+      '',
+      'Should NOT have error when using own email in edit mode'
+    );
+  });
+
+  test('validates email uniqueness - rejects other users email in edit mode', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    const employees = selectEmployees(store.getState());
+    const employee1 = employees[0];
+    const employee2 = employees[1];
+
+    element.isEditMode = true;
+    element.employeeId = employee1.id.toString();
+    element.formData = {...employee1, email: employee2.email};
+
+    await element.updateComplete;
+
+    const error = element._validateField('email', employee2.email);
+    assert.ok(
+      error,
+      'Should have error when trying to use another users email in edit mode'
+    );
+    assert.include(
+      error.toLowerCase(),
+      'already',
+      'Error message should mention email already exists'
+    );
+  });
+
+  test('email uniqueness check is case-insensitive', async () => {
+    const element = await fixture(html`<employee-form></employee-form>`);
+    await element.updateComplete;
+
+    const employees = selectEmployees(store.getState());
+    const existingEmail = employees[0].email;
+
+    const differentCaseEmail = existingEmail.toUpperCase();
+
+    element.isEditMode = false;
+    element.formData = {...element.formData, email: differentCaseEmail};
+
+    await element.updateComplete;
+
+    const error = element._validateField('email', differentCaseEmail);
+    assert.ok(
+      error,
+      'Should have error for duplicate email regardless of case'
+    );
+  });
+
   test('department select has correct options', async () => {
     const element = await fixture(html`<employee-form></employee-form>`);
     await element.updateComplete;
