@@ -137,7 +137,7 @@ suite('EmployeePagination', () => {
     await element.updateComplete;
 
     const prevButton = element.shadowRoot.querySelector('.pagination-prev');
-    prevButton.click();
+    prevButton.dispatchEvent(new MouseEvent('click', {bubbles: true}));
 
     assert.equal(clickedPage, 2);
   });
@@ -158,7 +158,7 @@ suite('EmployeePagination', () => {
     await element.updateComplete;
 
     const nextButton = element.shadowRoot.querySelector('.pagination-next');
-    nextButton.click();
+    nextButton.dispatchEvent(new MouseEvent('click', {bubbles: true}));
 
     assert.equal(clickedPage, 4);
   });
@@ -174,7 +174,7 @@ suite('EmployeePagination', () => {
     );
     await element.updateComplete;
 
-    const prevButton = element.shadowRoot.querySelector('.pagination-prev svg');
+    const prevButton = element.shadowRoot.querySelector('.pagination-prev');
     const color = prevButton.getAttribute('color');
     assert.equal(color, 'gray');
   });
@@ -190,7 +190,7 @@ suite('EmployeePagination', () => {
     );
     await element.updateComplete;
 
-    const nextButton = element.shadowRoot.querySelector('.pagination-next svg');
+    const nextButton = element.shadowRoot.querySelector('.pagination-next');
     const color = nextButton.getAttribute('color');
     assert.equal(color, 'gray');
   });

@@ -35,6 +35,7 @@ export class EmployeePagination extends LitElement {
     .pagination {
       display: flex;
       gap: 0.5rem;
+      align-items: center;
     }
 
     .pagination div.active {
@@ -47,6 +48,7 @@ export class EmployeePagination extends LitElement {
       height: auto;
       background: none;
       border: none;
+      flex-shrink: 0;
     }
 
     .pagination-item {
@@ -58,6 +60,12 @@ export class EmployeePagination extends LitElement {
       cursor: pointer;
       border-radius: 50%;
       font-weight: 500;
+      flex-shrink: 0;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .pagination-item:hover:not(.active) {
+      background-color: #f0f0f0;
     }
 
     .pagination-ellipsis {
@@ -68,6 +76,7 @@ export class EmployeePagination extends LitElement {
       justify-content: center;
       color: #666;
       cursor: default;
+      flex-shrink: 0;
     }
 
     .pagination svg {
@@ -75,23 +84,42 @@ export class EmployeePagination extends LitElement {
     }
 
     @media (max-width: 768px) {
-      .pagination {
-        gap: 0.25rem;
-        flex-wrap: wrap;
-        justify-content: center;
+      .pagination-section {
+        padding: 0.5rem;
       }
 
-      .pagination-item {
-        padding: 0.25rem 0.5rem;
-        text-align: center;
+      .pagination {
+        gap: 0.4rem;
+      }
+
+      .pagination-item,
+      .pagination-ellipsis {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.875rem;
+      }
+
+      .pagination svg {
+        width: 20px;
+        height: 20px;
       }
     }
 
     @media (max-width: 480px) {
       .pagination {
-        max-width: 100%;
-        overflow-x: auto;
-        padding: 0.25rem 0;
+        gap: 0.3rem;
+      }
+
+      .pagination-item,
+      .pagination-ellipsis {
+        min-width: 26px;
+        height: 26px;
+        font-size: 0.8125rem;
+      }
+
+      .pagination svg {
+        width: 18px;
+        height: 18px;
       }
     }
   `;

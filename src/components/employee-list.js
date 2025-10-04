@@ -74,19 +74,36 @@ export class EmployeeList extends ReduxMixin(LitElement) {
       }
     }
 
-    if (viewMode !== this.viewMode) {
-      this.viewMode = viewMode;
+    const itemsPerPageChanged = itemsPerPage !== this.itemsPerPage;
+    const viewModeChanged = viewMode !== this.viewMode;
+
+    if (itemsPerPageChanged || viewModeChanged) {
+      const currentOffset = (this.currentPage - 1) * this.itemsPerPage;
+
+      if (itemsPerPageChanged) {
+        this.itemsPerPage = itemsPerPage;
+        this.totalPages = Math.ceil(
+          (this.employees?.length || 0) / this.itemsPerPage
+        );
+      }
+
+      if (viewModeChanged) {
+        this.viewMode = viewMode;
+      }
+
+      if (this.employees && this.employees.length > 0) {
+        const newPage = Math.floor(currentOffset / this.itemsPerPage) + 1;
+        const validPage = Math.max(1, Math.min(newPage, this.totalPages));
+
+        if (validPage !== this.currentPage) {
+          this.dispatch(setCurrentPage(validPage));
+          return;
+        }
+      }
     }
 
     if (currentPage !== this.currentPage) {
       this.currentPage = currentPage;
-    }
-
-    if (itemsPerPage !== this.itemsPerPage) {
-      this.itemsPerPage = itemsPerPage;
-      this.totalPages = Math.ceil(
-        (this.employees?.length || 0) / this.itemsPerPage
-      );
     }
   }
 
