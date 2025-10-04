@@ -375,10 +375,16 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
     const {name, value} = e.target;
     const error = this._validateField(name, value);
 
-    this.errors = {
-      ...this.errors,
-      [name]: error,
-    };
+    if (error) {
+      this.errors = {
+        ...this.errors,
+        [name]: error,
+      };
+    } else {
+      const newErrors = {...this.errors};
+      delete newErrors[name];
+      this.errors = newErrors;
+    }
   }
 
   _handleSubmit(e) {

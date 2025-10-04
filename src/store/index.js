@@ -13,7 +13,7 @@ export const store = configureStore({
     language: languageReducer,
     employees: employeesReducer,
   },
-  preloadedState: persistedState,
+  preloadedState: persistedState || undefined,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(localStorageMiddleware),
   devTools:

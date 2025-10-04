@@ -3,7 +3,7 @@
  * Automatically saves Redux state to localStorage on every state change
  */
 
-const STORAGE_KEY = 'employee-mgmt-app-state';
+export const STORAGE_KEY = 'employee-mgmt-app-state';
 
 /**
  * Save state to localStorage
@@ -20,18 +20,18 @@ const saveToLocalStorage = (state) => {
 
 /**
  * Load state from localStorage
- * @returns {Object|undefined} Loaded state or undefined if not found
+ * @returns {Object|null} Loaded state or null if not found
  */
 export const loadFromLocalStorage = () => {
   try {
     const serializedState = localStorage.getItem(STORAGE_KEY);
     if (serializedState === null) {
-      return undefined;
+      return null;
     }
     return JSON.parse(serializedState);
   } catch (error) {
     console.error('Error loading from localStorage:', error);
-    return undefined;
+    return null;
   }
 };
 
