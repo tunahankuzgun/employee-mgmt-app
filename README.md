@@ -1,136 +1,159 @@
-# LitElement JavaScript starter
+# Employee Management Application
 
-This project includes a sample component using LitElement with JavaScript.
+> **A modern, responsive employee management system built with Web Components and LitElement**
 
-This template is generated from the `lit-starter-js` package in [the main Lit
-repo](https://github.com/lit/lit). Issues and PRs for this template should be
-filed in that repo.
+This project is a comprehensive employee management application that allows you to manage employee data with features like CRUD operations, search, filtering, pagination, and multi-language support. Built with modern web standards using LitElement, Redux Toolkit for state management, and Vaadin Router for navigation.
 
-## About this release
+## Features
 
-This is a pre-release of Lit 3.0, the next major version of Lit.
+- **Employee CRUD Operations** - Add, edit, delete, and view employee details
+- **Advanced Search & Filtering** - Search by name, department, position
+- **Pagination** - Efficient data handling with pagination controls
+- **Multi-language Support** - English and Turkish localization with i18next
+- **Responsive Design** - Responsive, modern dashboard interface
+- **Data Persistence** - Local storage integration with middleware
+- **Form Validation** - Comprehensive employee form validation
+- **Confirmation Dialogs** - User-friendly confirmation for destructive actions
+- **Modern Architecture** - Web Components with Redux state management
 
-Lit 3.0 has very few breaking changes from Lit 2.0:
+## Technologies Used
 
-- Drops support for IE11
-- Published as ES2021
-- Removes a couple of deprecated Lit 1.x APIs
+- **LitElement 3** - Modern web components framework
+- **Redux Toolkit** - Predictable state management
+- **Vaadin Router** - Client-side routing for SPAs
+- **i18next** - Internationalization framework
+- **Web Test Runner** - Modern testing framework
+- **ESLint & Prettier** - Code quality and formatting
 
-Lit 3.0 should require no changes to upgrade from Lit 2.0 for the vast majority of users. Once the full release is published, most apps and libraries will be able to extend their npm version ranges to include both 2.x and 3.x, like `"^2.7.0 || ^3.0.0"`.
+## Installation
 
-Lit 2.x and 3.0 are _interoperable_: templates, base classes, directives, decorators, etc., from one version of Lit will work with those from another.
+1. **Clone the repository:**
 
-Please file any issues you find on our [issue tracker](https://github.com/lit/lit/issues).
+   ```sh
+   git clone https://github.com/tunahankuzgun/employee-mgmt-app.git
+   cd employee-mgmt-app
+   ```
 
-## Setup
+2. **Install dependencies:**
 
-Install dependencies:
+   ```sh
+   npm install
+   ```
 
-```bash
-npm i
-```
+3. **Start the development server:**
+
+   ```sh
+   npm run serve
+   ```
+
+4. **Open the app in your browser:**
+   [http://localhost:8000](http://localhost:8000)
+
+> **Note:** This project uses native ES modules and modern web standards. It requires a modern browser that supports Web Components.
 
 ## Testing
 
-This sample modern-web.dev's
-[@web/test-runner](https://www.npmjs.com/package/@web/test-runner) for testing. See the
-[modern-web.dev testing documentation](https://modern-web.dev/docs/test-runner/overview) for
-more information.
+To run all tests:
 
-Tests can be run with the `test` script, which will run your tests against Lit's development mode (with more verbose errors) as well as against Lit's production mode:
-
-```bash
+```sh
 npm test
 ```
 
-For local testing during development, the `test:dev:watch` command will run your tests in Lit's development mode (with verbose errors) on every change to your source files:
+Run tests in development mode:
 
-```bash
-npm test:watch
+```sh
+npm run test:dev
 ```
 
-Alternatively the `test:prod` and `test:prod:watch` commands will run your tests in Lit's production mode.
+Run tests in watch mode:
 
-## Dev Server
-
-This sample uses modern-web.dev's [@web/dev-server](https://www.npmjs.com/package/@web/dev-server) for previewing the project without additional build steps. Web Dev Server handles resolving Node-style "bare" import specifiers, which aren't supported in browsers. It also automatically transpiles JavaScript and adds polyfills to support older browsers. See [modern-web.dev's Web Dev Server documentation](https://modern-web.dev/docs/dev-server/overview/) for more information.
-
-To run the dev server and open the project in a new browser tab:
-
-```bash
-npm run serve
+```sh
+npm run test:watch
 ```
 
-There is a development HTML file located at `/dev/index.html` that you can view at http://localhost:8000/dev/index.html. Note that this command will serve your code using Lit's development mode (with more verbose errors). To serve your code against Lit's production mode, use `npm run serve:prod`.
+Generate test coverage report:
 
-## Editing
-
-If you use VS Code, we highly recommend the [lit-plugin extension](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin), which enables some extremely useful features for lit-html templates:
-
-- Syntax highlighting
-- Type-checking
-- Code completion
-- Hover-over docs
-- Jump to definition
-- Linting
-- Quick Fixes
-
-The project is setup to recommend lit-plugin to VS Code users if they don't already have it installed.
-
-## Linting
-
-Linting of JavaScript files is provided by [ESLint](eslint.org). In addition, [lit-analyzer](https://www.npmjs.com/package/lit-analyzer) is used to type-check and lint lit-html templates with the same engine and rules as lit-plugin.
-
-The rules are mostly the recommended rules from each project, but some have been turned off to make LitElement usage easier. The recommended rules are pretty strict, so you may want to relax them by editing `.eslintrc.json`.
-
-To lint the project run:
-
-```bash
-npm run lint
+```sh
+npm run test:coverage
 ```
 
-## Formatting
+## Building
 
-[Prettier](https://prettier.io/) is used for code formatting. It has been pre-configured according to the Lit's style. You can change this in `.prettierrc.json`.
+This project doesn't require a build step for development as it uses native ES modules. For production optimization:
 
-Prettier has not been configured to run when committing files, but this can be added with Husky and `pretty-quick`. See the [prettier.io](https://prettier.io/) site for instructions.
-
-## Static Site
-
-This project includes a simple website generated with the [eleventy](https://11ty.dev) static site generator and the templates and pages in `/docs-src`. The site is generated to `/docs` and intended to be checked in so that GitHub pages can serve the site [from `/docs` on the main branch](https://help.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
-To enable the site go to the GitHub settings and change the GitHub Pages &quot;Source&quot; setting to &quot;main branch /docs folder&quot;.</p>
-
-To build the site, run:
-
-```bash
-npm run docs
+```sh
+npm run serve:prod
 ```
 
-To serve the site locally, run:
+## Project Structure
 
-```bash
-npm run docs:serve
+```
+src/
+  components/              # Web Components
+    app-shell.js           # Main application shell
+    employee-list.js       # Employee list view with table/card layouts
+    employee-form.js       # Employee creation/editing form
+    employee-table.js      # Data table component
+    employee-card-list.js  # Card layout for mobile
+    search-bar.js          # Search functionality
+    navigation-menu.js     # App navigation
+    language-selector.js   # Language switching
+    confirmation-dialog.js # Confirmation dialogs
+    employee-pagination.js # Pagination controls
+  store/                   # Redux store configuration
+    index.js               # Store setup
+    slices/                # Redux slices
+      employeesSlice.js    # Employee data management
+      languageSlice.js     # Language state
+      uiSlice.js           # UI state management
+    middleware/            # Custom middleware
+      localStorageMiddleware.js # Data persistence
+  mixins/                  # Reusable mixins
+    ReduxMixin.js          # Redux integration for components
+  locales/                 # Internationalization
+    en.js                  # English translations
+    tr.js                  # Turkish translations
+  utils/                   # Utility functions
+    i18n.js                # Internationalization setup
+    employeeHelpers.js     # Employee data helpers
+  router.js                # Application routing
+test/                      # Test files
+docs/                      # Documentation
+public/                    # Static assets
 ```
 
-To watch the site files, and re-build automatically, run:
+## Core Components
 
-```bash
-npm run docs:gen:watch
-```
+### Employee Management
 
-The site will usually be served at http://localhost:8000.
+- **Employee List** - View employees in table or card layout
+- **Employee Form** - Add/edit employee information
+- **Search & Filter** - Real-time search and department/position filtering
+- **Pagination** - Navigate through large datasets
 
-**Note**: The project uses Rollup to bundle and minify the source code for the docs site and not to publish to NPM. For bundling and minification, check the [Bundling and minification](#bundling-and-minification) section.
+### State Management
 
-## Bundling and minification
+- **Redux Store** - Centralized state management
+- **Local Storage** - Automatic data persistence
+- **Real-time Updates** - Reactive UI updates
 
-As stated in the [static site generation](#static-site) section, the bundling and minification setup in the Rollup configuration in this project is there specifically for the docs generation.
+### Internationalization
 
-We recommend publishing components as unoptimized JavaScript modules and performing build-time optimizations at the application level. This gives build tools the best chance to deduplicate code, remove dead code, and so on.
+- **Multi-language** - English and Turkish support
+- **Dynamic Switching** - Change language without page reload
+- **Localized Content** - All UI text and labels translated
 
-Please check the [Publishing best practices](https://lit.dev/docs/tools/publishing/#publishing-best-practices) for information on publishing reusable Web Components, and [Build for production](https://lit.dev/docs/tools/production/) for building application projects that include LitElement components, on the Lit site.
+## Development Scripts
 
-## More information
-
-See [Get started](https://lit.dev/docs/getting-started/) on the Lit site for more information.
+| Script                  | Description                       |
+| ----------------------- | --------------------------------- |
+| `npm run serve`         | Start development server          |
+| `npm run serve:prod`    | Start server in production mode   |
+| `npm test`              | Run all tests (dev + prod)        |
+| `npm run test:dev`      | Run tests in development mode     |
+| `npm run test:prod`     | Run tests in production mode      |
+| `npm run test:watch`    | Run tests in watch mode           |
+| `npm run test:coverage` | Generate test coverage report     |
+| `npm run lint`          | Run ESLint and Lit Analyzer       |
+| `npm run format`        | Format code with Prettier         |
+| `npm run analyze`       | Generate custom elements manifest |
