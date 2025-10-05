@@ -34,6 +34,7 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     showDeleteDialog: {type: Boolean},
     employeeToDelete: {type: Object},
     searchQuery: {type: String},
+    selectedEmployees: {type: Array},
   };
 
   constructor() {
@@ -47,6 +48,8 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     this.showDeleteDialog = false;
     this.employeeToDelete = null;
     this.searchQuery = '';
+    /** @type {Array<string|number>} */
+    this.selectedEmployees = [];
   }
 
   connectedCallback() {
@@ -215,8 +218,32 @@ export class EmployeeList extends ReduxMixin(LitElement) {
     this.employeeToDelete = null;
   }
 
-  _handleSelectAll(/* event */) {
-    // TODO: Implement select all functionality
+  _handleSelectAll(event) {
+    const {checked} = event.detail;
+    const paginatedEmployees = this._getPaginatedEmployees();
+
+    if (checked) {
+      const currentPageIds = paginatedEmployees.map((emp) => emp.id);
+      this.selectedEmployees = [...currentPageIds];
+    } else {
+      this.selectedEmployees = [];
+    }
+    this.requestUpdate();
+  }
+
+  _handleIndividualSelect(event) {
+    const {employeeId, checked} = event.detail;
+
+    if (checked) {
+      if (!this.selectedEmployees.includes(employeeId)) {
+        this.selectedEmployees = [...this.selectedEmployees, employeeId];
+      }
+    } else {
+      this.selectedEmployees = this.selectedEmployees.filter(
+        (id) => id !== employeeId
+      );
+    }
+    this.requestUpdate();
   }
 
   static styles = css`
@@ -375,9 +402,17 @@ export class EmployeeList extends ReduxMixin(LitElement) {
           ? html`
               <employee-table
                 .employees="${/** @type {any} */ (paginatedEmployees)}"
+                .selectedEmployees="${
+                  /** @type {any} */ (this.selectedEmployees)
+                }"
+                .allSelected="${paginatedEmployees.length > 0 &&
+                paginatedEmployees.every((emp) =>
+                  this.selectedEmployees.includes(emp.id)
+                )}"
                 @employee-edit="${this._handleEdit}"
                 @employee-delete="${this._handleDelete}"
                 @select-all="${this._handleSelectAll}"
+                @individual-select="${this._handleIndividualSelect}"
               ></employee-table>
             `
           : html`

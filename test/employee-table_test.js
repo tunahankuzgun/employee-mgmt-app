@@ -166,6 +166,121 @@ suite('EmployeeTable', () => {
     assert.isTrue(selectAllChecked);
   });
 
+  test('select all checkbox is checked when allSelected prop is true', async () => {
+    const element = await fixture(
+      html`<employee-table
+        .employees="${mockEmployees}"
+        .allSelected="${true}"
+      ></employee-table>`
+    );
+    await element.updateComplete;
+
+    const selectAllCheckbox = element.shadowRoot.querySelector(
+      'thead input[type="checkbox"]'
+    );
+    assert.isTrue(selectAllCheckbox.checked);
+  });
+
+  test('select all checkbox is unchecked when allSelected prop is false', async () => {
+    const element = await fixture(
+      html`<employee-table
+        .employees="${mockEmployees}"
+        .allSelected="${false}"
+      ></employee-table>`
+    );
+    await element.updateComplete;
+
+    const selectAllCheckbox = element.shadowRoot.querySelector(
+      'thead input[type="checkbox"]'
+    );
+    assert.isFalse(selectAllCheckbox.checked);
+  });
+
+  test('handles individual checkbox selection', async () => {
+    let selectedEmployeeId = null;
+    let selectedChecked = null;
+    const element = await fixture(
+      html`<employee-table
+        .employees="${mockEmployees}"
+        @individual-select="${(e) => {
+          selectedEmployeeId = e.detail.employeeId;
+          selectedChecked = e.detail.checked;
+        }}"
+      ></employee-table>`
+    );
+    await element.updateComplete;
+
+    const firstRowCheckbox = element.shadowRoot.querySelector(
+      '.table-body tr:first-child input[type="checkbox"]'
+    );
+    firstRowCheckbox.checked = true;
+    firstRowCheckbox.dispatchEvent(new Event('change'));
+
+    assert.equal(selectedEmployeeId, mockEmployees[0].id);
+    assert.isTrue(selectedChecked);
+  });
+
+  test('individual checkboxes reflect selectedEmployees prop', async () => {
+    const selectedIds = [mockEmployees[0].id];
+    const element = await fixture(
+      html`<employee-table
+        .employees="${mockEmployees}"
+        .selectedEmployees="${selectedIds}"
+      ></employee-table>`
+    );
+    await element.updateComplete;
+
+    const firstRowCheckbox = element.shadowRoot.querySelector(
+      '.table-body tr:first-child input[type="checkbox"]'
+    );
+    const secondRowCheckbox = element.shadowRoot.querySelector(
+      '.table-body tr:nth-child(2) input[type="checkbox"]'
+    );
+
+    assert.isTrue(firstRowCheckbox.checked);
+    assert.isFalse(secondRowCheckbox.checked);
+  });
+
+  test('_isEmployeeSelected returns true for selected employee', async () => {
+    const selectedIds = [mockEmployees[0].id];
+    const element = await fixture(
+      html`<employee-table
+        .employees="${mockEmployees}"
+        .selectedEmployees="${selectedIds}"
+      ></employee-table>`
+    );
+    await element.updateComplete;
+
+    assert.isTrue(element._isEmployeeSelected(mockEmployees[0].id));
+    assert.isFalse(element._isEmployeeSelected(mockEmployees[1].id));
+  });
+
+  test('renders correct number of checkboxes (header + rows)', async () => {
+    const element = await fixture(
+      html`<employee-table .employees="${mockEmployees}"></employee-table>`
+    );
+    await element.updateComplete;
+
+    const allCheckboxes = element.shadowRoot.querySelectorAll(
+      'input[type="checkbox"]'
+    );
+    assert.equal(allCheckboxes.length, mockEmployees.length + 1);
+  });
+
+  test('select all checkbox has aria-label', async () => {
+    const element = await fixture(
+      html`<employee-table .employees="${mockEmployees}"></employee-table>`
+    );
+    await element.updateComplete;
+
+    const selectAllCheckbox = element.shadowRoot.querySelector(
+      'thead input[type="checkbox"]'
+    );
+    const ariaLabel = selectAllCheckbox.getAttribute('aria-label');
+    assert.isNotNull(ariaLabel);
+    assert.isTrue(ariaLabel.length > 0);
+  });
+
   test('renders empty state when no employees', async () => {
     const element = await fixture(
       html`<employee-table .employees="${[]}"></employee-table>`

@@ -21,6 +21,7 @@ export default {
     addEmployee: 'Çalışan Ekle',
     tableView: 'Tablo',
     listView: 'Liste',
+    selectAll: 'Tümünü Seç',
     firstName: 'Ad',
     lastName: 'Soyad',
     dateOfEmployment: 'İşe Giriş Tarihi',

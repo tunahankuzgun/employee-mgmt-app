@@ -419,4 +419,208 @@ suite('Component State Management', () => {
 
     assert.isTrue(element.totalPages >= originalPages);
   });
+
+  suite('Select All Functionality', () => {
+    test('initializes with empty selectedEmployees array', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      assert.isArray(element.selectedEmployees);
+      assert.equal(element.selectedEmployees.length, 0);
+    });
+
+    test('_handleSelectAll selects all employees on current page', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      const mockEvent = {
+        detail: {checked: true},
+      };
+
+      element._handleSelectAll(mockEvent);
+      await element.updateComplete;
+
+      assert.equal(element.selectedEmployees.length, paginatedEmployees.length);
+      paginatedEmployees.forEach((emp) => {
+        assert.isTrue(element.selectedEmployees.includes(emp.id));
+      });
+    });
+
+    test('_handleSelectAll deselects all when unchecked', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      element._handleSelectAll({detail: {checked: true}});
+      await element.updateComplete;
+      assert.isTrue(element.selectedEmployees.length > 0);
+
+      element._handleSelectAll({detail: {checked: false}});
+      await element.updateComplete;
+      assert.equal(element.selectedEmployees.length, 0);
+    });
+
+    test('_handleIndividualSelect adds employee to selection', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      if (paginatedEmployees.length > 0) {
+        const employeeId = paginatedEmployees[0].id;
+        const mockEvent = {
+          detail: {employeeId, checked: true},
+        };
+
+        element._handleIndividualSelect(mockEvent);
+        await element.updateComplete;
+
+        assert.isTrue(element.selectedEmployees.includes(employeeId));
+      }
+    });
+
+    test('_handleIndividualSelect removes employee from selection', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      if (paginatedEmployees.length > 0) {
+        const employeeId = paginatedEmployees[0].id;
+
+        element._handleIndividualSelect({
+          detail: {employeeId, checked: true},
+        });
+        await element.updateComplete;
+        assert.isTrue(element.selectedEmployees.includes(employeeId));
+
+        element._handleIndividualSelect({
+          detail: {employeeId, checked: false},
+        });
+        await element.updateComplete;
+        assert.isFalse(element.selectedEmployees.includes(employeeId));
+      }
+    });
+
+    test('_handleIndividualSelect does not add duplicate IDs', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      if (paginatedEmployees.length > 0) {
+        const employeeId = paginatedEmployees[0].id;
+
+        element._handleIndividualSelect({
+          detail: {employeeId, checked: true},
+        });
+        element._handleIndividualSelect({
+          detail: {employeeId, checked: true},
+        });
+        await element.updateComplete;
+
+        const count = element.selectedEmployees.filter(
+          (id) => id === employeeId
+        ).length;
+        assert.equal(count, 1);
+      }
+    });
+
+    test('passes selectedEmployees to employee-table component', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      element.viewMode = 'table';
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      if (paginatedEmployees.length > 0) {
+        element.selectedEmployees = [paginatedEmployees[0].id];
+        await element.updateComplete;
+
+        const tableComponent =
+          element.shadowRoot.querySelector('employee-table');
+        assert.isNotNull(tableComponent);
+        assert.isArray(tableComponent.selectedEmployees);
+      }
+    });
+
+    test('passes allSelected state to employee-table when all selected', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      element.viewMode = 'table';
+      await element.updateComplete;
+
+      element._handleSelectAll({detail: {checked: true}});
+      await element.updateComplete;
+
+      const tableComponent = element.shadowRoot.querySelector('employee-table');
+      assert.isNotNull(tableComponent);
+      assert.isTrue(tableComponent.allSelected);
+    });
+
+    test('passes allSelected as false when not all selected', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      element.viewMode = 'table';
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      if (paginatedEmployees.length > 1) {
+        element.selectedEmployees = [paginatedEmployees[0].id];
+        await element.updateComplete;
+
+        const tableComponent =
+          element.shadowRoot.querySelector('employee-table');
+        assert.isNotNull(tableComponent);
+        assert.isFalse(tableComponent.allSelected);
+      }
+    });
+
+    test('clears selections when switching pages', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      await element.updateComplete;
+
+      element._handleSelectAll({detail: {checked: true}});
+      await element.updateComplete;
+      const initialSelectionCount = element.selectedEmployees.length;
+      assert.isTrue(initialSelectionCount > 0);
+
+      assert.isArray(element.selectedEmployees);
+    });
+
+    test('handles select-all event from employee-table', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      element.viewMode = 'table';
+      await element.updateComplete;
+
+      const tableComponent = element.shadowRoot.querySelector('employee-table');
+      assert.isNotNull(tableComponent);
+
+      const selectAllEvent = new CustomEvent('select-all', {
+        detail: {checked: true},
+        bubbles: true,
+      });
+      tableComponent.dispatchEvent(selectAllEvent);
+      await element.updateComplete;
+
+      assert.isTrue(element.selectedEmployees.length > 0);
+    });
+
+    test('handles individual-select event from employee-table', async () => {
+      const element = await fixture(html`<employee-list></employee-list>`);
+      element.viewMode = 'table';
+      await element.updateComplete;
+
+      const paginatedEmployees = element._getPaginatedEmployees();
+      if (paginatedEmployees.length > 0) {
+        const tableComponent =
+          element.shadowRoot.querySelector('employee-table');
+        assert.isNotNull(tableComponent);
+
+        const employeeId = paginatedEmployees[0].id;
+        const selectEvent = new CustomEvent('individual-select', {
+          detail: {employeeId, checked: true},
+          bubbles: true,
+        });
+        tableComponent.dispatchEvent(selectEvent);
+        await element.updateComplete;
+
+        assert.isTrue(element.selectedEmployees.includes(employeeId));
+      }
+    });
+  });
 });

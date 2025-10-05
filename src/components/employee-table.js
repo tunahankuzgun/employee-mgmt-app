@@ -9,12 +9,17 @@ import {getDepartmentName, getPositionName} from '../utils/employeeHelpers.js';
 export class EmployeeTable extends LitElement {
   static properties = {
     employees: {type: Array},
+    selectedEmployees: {type: Array, state: false},
+    allSelected: {type: Boolean, state: false},
   };
 
   constructor() {
     super();
     /** @type {Array<Object>} */
     this.employees = [];
+    /** @type {Array<string|number>} */
+    this.selectedEmployees = [];
+    this.allSelected = false;
   }
 
   static styles = css`
@@ -251,6 +256,19 @@ export class EmployeeTable extends LitElement {
     );
   }
 
+  _handleIndividualSelect(e, employeeId) {
+    this.dispatchEvent(
+      new CustomEvent('individual-select', {
+        detail: {employeeId, checked: e.target.checked},
+        bubbles: true,
+      })
+    );
+  }
+
+  _isEmployeeSelected(employeeId) {
+    return this.selectedEmployees.includes(employeeId);
+  }
+
   _handleEdit(employee) {
     this.dispatchEvent(
       new CustomEvent('employee-edit', {
@@ -279,7 +297,12 @@ export class EmployeeTable extends LitElement {
         <thead class="table-header">
           <tr class="employee-table-row">
             <th>
-              <input type="checkbox" @change="${this._handleSelectAll}" />
+              <input
+                type="checkbox"
+                .checked="${this.allSelected}"
+                @change="${this._handleSelectAll}"
+                aria-label="${t('employeeList.selectAll', 'Select All')}"
+              />
             </th>
             <th>${t('employeeList.firstName', 'First Name')}</th>
             <th>${t('employeeList.lastName', 'Last Name')}</th>
@@ -296,7 +319,14 @@ export class EmployeeTable extends LitElement {
           ${this.employees.map(
             (emp) => html`
               <tr>
-                <td><input type="checkbox" .value="${emp.id}" /></td>
+                <td>
+                  <input
+                    type="checkbox"
+                    .value="${emp.id}"
+                    .checked="${this._isEmployeeSelected(emp.id)}"
+                    @change="${(e) => this._handleIndividualSelect(e, emp.id)}"
+                  />
+                </td>
                 <td class="table-firstname">${emp.firstName}</td>
                 <td class="table-lastname">${emp.lastName}</td>
                 <td>${this._formatDate(emp.dateOfEmployment)}</td>

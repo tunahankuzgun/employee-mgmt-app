@@ -21,6 +21,7 @@ export default {
     addEmployee: 'Add Employee',
     tableView: 'Table',
     listView: 'List',
+    selectAll: 'Select All',
     firstName: 'First Name',
     lastName: 'Last Name',
     dateOfEmployment: 'Date of Employment',
