@@ -24,7 +24,7 @@
     "test:coverage": "wtr --coverage",
     "test:coverage:watch": "wtr --coverage --watch",
     "ci:lint": "npm run lint:eslint && npm run lint:lit-analyzer",
-    "ci:test": "npm run test:coverage",
+    "ci:test": "wtr --config web-test-runner.ci.config.js --coverage",
     "ci:security": "npm audit --audit-level=moderate",
     "ci:format-check": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --check"
   },
