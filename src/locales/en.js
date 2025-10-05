@@ -57,6 +57,7 @@ export default {
     save: 'Save',
     update: 'Update',
     cancel: 'Cancel',
+    pleaseSelect: 'Please Select',
   },
   validationErrors: {
     required: 'This field is required',

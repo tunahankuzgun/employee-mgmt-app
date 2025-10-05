@@ -627,7 +627,9 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
                 required
               >
                 ${!this.isEditMode && !this.formData.department
-                  ? html`<option value="" selected>Please Select</option>`
+                  ? html`<option value="" selected>
+                      ${t('employeeForm.pleaseSelect')}
+                    </option>`
                   : ''}
                 <option
                   value="${DEPARTMENTS.ANALYTICS}"
@@ -654,7 +656,9 @@ export class EmployeeForm extends ReduxMixin(LitElement) {
                 required
               >
                 ${!this.isEditMode && !this.formData.position
-                  ? html`<option value="" selected>Please Select</option>`
+                  ? html`<option value="" selected>
+                      ${t('employeeForm.pleaseSelect')}
+                    </option>`
                   : ''}
                 <option
                   value="${POSITIONS.JUNIOR}"

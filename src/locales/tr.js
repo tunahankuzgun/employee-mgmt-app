@@ -57,6 +57,7 @@ export default {
     save: 'Kaydet',
     update: 'Güncelle',
     cancel: 'İptal',
+    pleaseSelect: 'Lütfen Seçiniz',
   },
   validationErrors: {
     required: 'Bu alan zorunludur',
