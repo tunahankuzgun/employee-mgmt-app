@@ -145,15 +145,38 @@ public/                    # Static assets
 
 ## Development Scripts
 
-| Script                  | Description                       |
-| ----------------------- | --------------------------------- |
-| `npm run serve`         | Start development server          |
-| `npm run serve:prod`    | Start server in production mode   |
-| `npm test`              | Run all tests (dev + prod)        |
-| `npm run test:dev`      | Run tests in development mode     |
-| `npm run test:prod`     | Run tests in production mode      |
-| `npm run test:watch`    | Run tests in watch mode           |
-| `npm run test:coverage` | Generate test coverage report     |
-| `npm run lint`          | Run ESLint and Lit Analyzer       |
-| `npm run format`        | Format code with Prettier         |
-| `npm run analyze`       | Generate custom elements manifest |
+| Script                    | Description                       |
+| ------------------------- | --------------------------------- |
+| `npm run serve`           | Start development server          |
+| `npm run serve:prod`      | Start server in production mode   |
+| `npm test`                | Run all tests (dev + prod)        |
+| `npm run test:dev`        | Run tests in development mode     |
+| `npm run test:prod`       | Run tests in production mode      |
+| `npm run test:watch`      | Run tests in watch mode           |
+| `npm run test:coverage`   | Generate test coverage report     |
+| `npm run lint`            | Run ESLint and Lit Analyzer       |
+| `npm run format`          | Format code with Prettier         |
+| `npm run analyze`         | Generate custom elements manifest |
+| `npm run ci:lint`         | Run linting for CI                |
+| `npm run ci:test`         | Run tests with coverage for CI    |
+| `npm run ci:security`     | Run security audit                |
+| `npm run ci:format-check` | Check code formatting (CI)        |
+
+## Continuous Integration (CI)
+
+This project includes a comprehensive GitHub Actions workflow for continuous integration. Every push and pull request to the `master` branch will automatically:
+
+- **Multi-Node Testing** - Test on Node.js 18.x and 20.x
+- **Code Quality Checks** - Run ESLint and Lit Analyzer
+- **Format Validation** - Ensure code follows Prettier formatting rules
+- **Security Scanning** - Run npm audit for known vulnerabilities
+- **Test Coverage** - Generate and upload coverage reports to Codecov
+- **Cross-platform Testing** - Run tests on Ubuntu Linux environment
+
+### CI Jobs
+
+- **Test Job** - Runs tests with coverage across multiple Node.js versions
+- **Lint Job** - Validates code quality and formatting
+- **Security Job** - Performs security audits and vulnerability checks
+
+You can find the workflow file at `.github/workflows/ci.yml`.

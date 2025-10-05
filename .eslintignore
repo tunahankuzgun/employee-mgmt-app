@@ -1,6 +1,12 @@
-node_modules/*
-docs/*
-docs-src/*
+node_modules/
+node_modules/**
+docs/
+docs-src/
+coverage/
+.nyc_output/
 rollup-config.js
 custom-elements.json
 web-dev-server.config.js
+web-test-runner.config.js
+*.bundled.js
+.github/

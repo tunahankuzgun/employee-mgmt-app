@@ -2,6 +2,7 @@
   "root": true,
   "extends": ["eslint:recommended"],
   "parser": "@babel/eslint-parser",
+  "ignorePatterns": ["node_modules/", "coverage/", "docs/", "*.bundled.js"],
   "globals": {
     "chai": "readonly"
   },
