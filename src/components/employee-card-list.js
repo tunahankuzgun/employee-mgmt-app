@@ -20,7 +20,7 @@ export class EmployeeCardList extends LitElement {
   static styles = css`
     :host {
       display: grid;
-      grid-template-columns: auto auto;
+      grid-template-columns: 1fr 1fr;
       width: 85%;
       gap: 6rem 8rem;
       padding: 1rem;
@@ -35,6 +35,7 @@ export class EmployeeCardList extends LitElement {
       border-radius: 4px;
       padding: 1rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      width: 100%;
     }
 
     .card-content {
@@ -53,6 +54,7 @@ export class EmployeeCardList extends LitElement {
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
+      min-width: 0;
     }
 
     .field-group label {
@@ -60,11 +62,17 @@ export class EmployeeCardList extends LitElement {
       font-weight: 600;
       color: gray;
       letter-spacing: 0.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .field-group span {
       font-size: 0.875rem;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .card-actions {
@@ -117,7 +125,15 @@ export class EmployeeCardList extends LitElement {
 
     @media (max-width: 1440px) {
       :host {
-        gap: 2rem !important;
+        gap: 2rem 7rem;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      :host {
+        gap: 2rem 4rem;
+        width: auto;
+        margin-left: -3rem;
       }
     }
 
@@ -127,13 +143,13 @@ export class EmployeeCardList extends LitElement {
         gap: 1rem;
         padding: 0.4rem;
         width: 100%;
-        margin-left: -0.5rem;
       }
 
       .employee-card {
-        padding: 0.75rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        margin-left: 50px;
       }
 
       .card-content {
